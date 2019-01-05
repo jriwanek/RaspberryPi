@@ -40,7 +40,7 @@ memory_sizes = {
 }
 memory_sizes_asString = {v: k for k, v in memory_sizes.items()}
 
-manafacturers = {
+manufacturers = {
     'Sony UK':    '0000', # 0
     'Egoman':     '0001', # 1
     'Embest':     '0010', # 2
@@ -60,7 +60,7 @@ manafacturers = {
     'Qisda':      'QISD', # TODO: Correct value unknown
     'Unknown':    ''
 }
-manafacturers_asString = {v: k for k, v in manafacturers.items()}
+manufacturers_asString = {v: k for k, v in manufacturers.items()}
 
 processors = {
     'BCM2835':   '0000', # 0
@@ -192,7 +192,7 @@ regions = {
 }
 
 memory_size = '000'
-manafacturer = '0000'
+manufacturer = '0000'
 processor = '0000'
 board_type = '00000000'
 board_revision = '0000'
@@ -243,7 +243,7 @@ def revision(name):
         'board_revision':        (28, 32), # Revision of the board
         'board_type':            (20, 28), # Model of the board
         'processor':             (16, 20), # Installed Processor
-        'manafacturer':          (12, 16), # Manafacturer of the board
+        'manufacturer':          (12, 16), # Manufacturer of the board
         'memory_size':           ( 9, 12), # Amount of RAM the board has
         'new_flag':              ( 8,  9), # If set, this board uses the new versioning scheme
         'bits_24_to_31':         ( 0,  8)  # Unused
@@ -293,7 +293,7 @@ def processRevision():
     if flag == '0':
         generateInfoLegacy(revision('legacy_board_revision'))
     elif flag == '1':
-        generateInfo(revision('memory_size'), revision('manafacturer'), revision('processor'), revision('board_type'), revision('board_revision'))
+        generateInfo(revision('memory_size'), revision('manufacturer'), revision('processor'), revision('board_type'), revision('board_revision'))
 
 def formatMAC():
     mac_part_1 = getData('mac_address_one')
@@ -382,17 +382,17 @@ def generateInfoLegacy(x):
     elif x == '11111':
         generateInfoFromDict('unknown', 'unknown', 'unknown', 'unknown', 'unknown')  # 1f - Unknown Model
 
-def generateInfoFromDict(memory_size, manafacturer, processor, board_type, board_revision):
-    generateInfo(memory_sizes[memory_size], manafacturers[manafacturer], processors[processor], board_types[board_type], board_revisions[board_revision])
+def generateInfoFromDict(memory_size, manufacturer, processor, board_type, board_revision):
+    generateInfo(memory_sizes[memory_size], manufacturers[manufacturer], processors[processor], board_types[board_type], board_revisions[board_revision])
 
-def generateInfo(memory_size_in, manafacturer_in, processor_in, board_type_in, board_revision_in):
+def generateInfo(memory_size_in, manufacturer_in, processor_in, board_type_in, board_revision_in):
     global memory_size
-    global manafacturer
+    global manufacturer
     global processor
     global board_type
     global board_revision
     memory_size = memory_size_in
-    manafacturer = manafacturer_in
+    manufacturer = manufacturer_in
     processor = processor_in
     board_type = board_type_in
     board_revision = board_revision_in
@@ -463,7 +463,7 @@ print ('  Inverse Serial Number :', getHex('serial_number_inverted'))
 print ('        Revision Number :', getHex('revision_number'))
 print ('      New Revision Flag :', revision('new_flag'))
 print ('                    RAM :', memory_sizes_asString[memory_size], "MB")
-print ('           Manafacturer :', manafacturers_asString[manafacturer])
+print ('           Manufacturer :', manufacturers_asString[manufacturer])
 print ('                    CPU :', processors_asString[processor])
 print ('             Board Type : Raspberry Pi Model', board_types_asString[board_type]) # TODO: Check if any of the 4 high bits are set and if they are, handle differently for now.
 print ('         Board Revision :', board_revisions_asString[board_revision])
