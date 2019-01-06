@@ -151,7 +151,7 @@ REGIONS = {
     'unknown_13':             13,
     'unknown_14':             14,
     'unknown_15':             15,
-    'unknown_16':             16, # Usually 00280000, may? change to 242800 when you enable access to i2c2, as yet unknown
+    'unknown_16':             16, # Usually 00280000, sometimes 242800 or 6c280000, as yet unknown
     'bootmode':               17, # BootMode Register
     'bootmode_copy':          18, # Backup copy of BootMode Register
     'unknown_19':             19, # Always ffffffff in tests
