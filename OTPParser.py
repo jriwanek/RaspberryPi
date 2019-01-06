@@ -299,10 +299,6 @@ def process_bootmode():
     if bootmode_primary != bootmode_copy:
         print('Bootmode fields are not the same, this is a bad thing!')
 
-# TODO: Obsolete
-#def testBit(int_type, offset):
-#    return(int_type & mask)
-
 def process_serial():
     """Process Serial, Check against Inverse Serial."""
     serial = get_hex('serial_number')
