@@ -1,24 +1,21 @@
 #!/usr/bin/python
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function, unicode_literals
+
+import sys
 
 try:
     from future import standard_library
     standard_library.install_aliases()
 except ImportError:
-    print('OTPParser requires future!')
+    sys.exit('OTPParser requires future!')
 
+try: 
+	from builtins import hex, int, open, range, str
+except ImportError:
+	sys.exit("OTPParser requires future! (can't import 'builtins')")
 
-
-from builtins import hex
-from builtins import int
-from builtins import open
-from builtins import range
-from builtins import str
 import sys
-import os.path
+from os import path
 
 """Raspberry Pi OTP Dump Parser
 
@@ -456,7 +453,7 @@ def pretty_string(value):
 def read_otp():
     """Read OTP from specified file."""
     if len(sys.argv) > 1: # We're given an argument on the command line
-        if os.path.isfile(sys.argv[1]):
+        if path.isfile(sys.argv[1]):
             with open(sys.argv[1], 'r') as file:
                 __read_otp_inner(file)
         else:
