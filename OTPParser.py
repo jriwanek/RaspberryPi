@@ -65,7 +65,7 @@ MEMORY_SIZES = {
     '256/512':   'EITHER',
     'unknown': ''
 }
-MEMORY_SIZES_AS_STRING = dict((v, k) for k, v in MEMORY_SIZES.items())
+MEMORY_SIZES_AS_STRING = dict((v, k) for k, v in list(MEMORY_SIZES.items()))
 
 MANUFACTURERS = {
     'Sony UK':    '0000', # 0
@@ -87,7 +87,7 @@ MANUFACTURERS = {
     'Qisda':      'QISD', # Correct value unknown
     'unknown':    ''
 }
-MANUFACTURERS_AS_STRING = dict((v, k) for k, v in MANUFACTURERS.items())
+MANUFACTURERS_AS_STRING = dict((v, k) for k, v in list(MANUFACTURERS.items()))
 
 PROCESSORS = {
     'BCM2835':   '0000', # 0
@@ -109,7 +109,7 @@ PROCESSORS = {
     'unknown':   ''
 
 }
-PROCESSORS_AS_STRING = dict((v, k) for k, v in PROCESSORS.items())
+PROCESSORS_AS_STRING = dict((v, k) for k, v in list(PROCESSORS.items()))
 
 BOARD_TYPES = {
     'A':         '00000000', # 0
@@ -130,7 +130,7 @@ BOARD_TYPES = {
     'unknown_f': '00001111', # f (Not in known use)
     'unknown':   ''
 }
-BOARD_TYPES_AS_STRING = dict((v, k) for k, v in BOARD_TYPES.items())
+BOARD_TYPES_AS_STRING = dict((v, k) for k, v in list(BOARD_TYPES.items()))
 
 BOARD_REVISIONS = {
     '1.0':       '0000',
@@ -152,7 +152,7 @@ BOARD_REVISIONS = {
     '2.0':       ' 2.0', # Correct Value unknown.
     'unknown':   ''
 }
-BOARD_REVISIONS_AS_STRING = dict((v, k) for k, v in BOARD_REVISIONS.items())
+BOARD_REVISIONS_AS_STRING = dict((v, k) for k, v in list(BOARD_REVISIONS.items()))
 
 LEGACY_REVISIONS = {
     '00010': {'memory_size': '256', 'manufacturer': 'Egoman',
