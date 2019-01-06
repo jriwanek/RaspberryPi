@@ -33,8 +33,11 @@ from builtins import open
 from builtins import range
 import sys
 import os.path
-from future import standard_library
-standard_library.install_aliases()
+try:
+    from future import standard_library
+    standard_library.install_aliases()
+except ImportError:
+    print('OTPParser requires future!')
 try:
     from bitstring import BitArray
 except ImportError:
