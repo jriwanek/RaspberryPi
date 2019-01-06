@@ -404,7 +404,7 @@ def process_eth_clk_frequency(bit):
 
 def generate_info_legacy(bits):
     """Generate information for legacy board revision."""
-    if bits in LEGACY_REVISIONS.keys():
+    if bits in list(LEGACY_REVISIONS.keys()):
         input_dict = LEGACY_REVISIONS[bits]
     else:
         input_dict = LEGACY_REVISIONS['default']
