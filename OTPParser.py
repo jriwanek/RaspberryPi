@@ -344,11 +344,7 @@ def process_eth_clk_frequency(bit):
 
 def generate_info_legacy(bits):
     """Generate information for legacy board revision."""
-    if bits == '00000':   # 00 - Unknown Model
-        generate_info_from_dict('unknown', 'unknown', 'unknown', 'unknown', 'unknown')
-    elif bits == '00001': # 01 - Unknown Model
-        generate_info_from_dict('unknown', 'unknown', 'unknown', 'unknown', 'unknown')
-    elif bits == '00010': # 02
+    if bits == '00010': # 02
         generate_info_from_dict('256', 'Egoman', 'BCM2835', 'B', '1.0')
     elif bits == '00011': # 03
         generate_info_from_dict('256', 'Egoman', 'BCM2835', 'B', '1.0')
@@ -364,12 +360,6 @@ def generate_info_legacy(bits):
         generate_info_from_dict('256', 'Sony UK', 'BCM2835', 'A', '2.0')
     elif bits == '01001': # 09
         generate_info_from_dict('256', 'Qisda', 'BCM2835', 'A', '2.0')
-    elif bits == '01010': # 0a - Unknown Model
-        generate_info_from_dict('unknown', 'unknown', 'unknown', 'unknown', 'unknown')
-    elif bits == '01011': # 0b - Unknown Model
-        generate_info_from_dict('unknown', 'unknown', 'unknown', 'unknown', 'unknown')
-    elif bits == '01100': # 0c - Unknown Model
-        generate_info_from_dict('unknown', 'unknown', 'unknown', 'unknown', 'unknown')
     elif bits == '01101': # od
         generate_info_from_dict('512', 'Egoman', 'BCM2835', 'B', '2.0')
     elif bits == '01110': # 0e
@@ -388,25 +378,7 @@ def generate_info_legacy(bits):
         generate_info_from_dict('512', 'Embest', 'BCM2835', 'CM1', '1.0')
     elif bits == '10101': # 15 - This can be 256MB or 512MB
         generate_info_from_dict('256/512', 'Embest', 'BCM2835', 'A+', '1.1')
-    elif bits == '10110': # 16 - Unknown Model
-        generate_info_from_dict('unknown', 'unknown', 'unknown', 'unknown', 'unknown')
-    elif bits == '10111': # 17 - Unknown Model
-        generate_info_from_dict('unknown', 'unknown', 'unknown', 'unknown', 'unknown')
-    elif bits == '11000': # 18 - Unknown Model
-        generate_info_from_dict('unknown', 'unknown', 'unknown', 'unknown', 'unknown')
-    elif bits == '11001': # 19 - Unknown Model
-        generate_info_from_dict('unknown', 'unknown', 'unknown', 'unknown', 'unknown')
-    elif bits == '11010': # 1a - Unknown Model
-        generate_info_from_dict('unknown', 'unknown', 'unknown', 'unknown', 'unknown')
-    elif bits == '11011': # 1b - Unknown Model
-        generate_info_from_dict('unknown', 'unknown', 'unknown', 'unknown', 'unknown')
-    elif bits == '11100': # 1c - Unknown Model
-        generate_info_from_dict('unknown', 'unknown', 'unknown', 'unknown', 'unknown')
-    elif bits == '11101': # 1d - Unknown Model
-        generate_info_from_dict('unknown', 'unknown', 'unknown', 'unknown', 'unknown')
-    elif bits == '11110': # 1e - Unknown Model
-        generate_info_from_dict('unknown', 'unknown', 'unknown', 'unknown', 'unknown')
-    elif bits == '11111': # 1f - Unknown Model
+    else: # Unknown Model
         generate_info_from_dict('unknown', 'unknown', 'unknown', 'unknown', 'unknown')
 
 def generate_info_from_dict(memory_size_in, manufacturer_in, processor_in, board_type_in, board_revision_in):
