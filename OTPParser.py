@@ -221,7 +221,7 @@ PROCESSOR = '0000'
 BOARD_TYPE = '00000000'
 BOARD_REVISION = '0000'
 
-DATA = []
+DATA = {}
 
 def unknown_16(name):
     """Handler for region 16."""
@@ -425,8 +425,7 @@ def to_hex(string):
 def get_data(loc):
     """Get unformatted data from specified OTP region."""
     region = REGIONS[loc]
-    offset = 8
-    return DATA[region - offset]
+    return DATA[region]
 
 def get_binary(loc):
     """Get binary data from specified OTP region."""
@@ -471,7 +470,7 @@ def __read_otp_inner(myfile):
             if "Command not registered" in line:
                 raise TypoError
             unprocessed = line.split(':', 1)[1]
-            DATA.append(unprocessed.rstrip('\r\n'))
+            DATA[int(line.split(':', 1)[0])] = unprocessed.rstrip('\r\n')
         except IndexError:
             sys.exit('Invalid OTP Dump')
         except TypoError:
