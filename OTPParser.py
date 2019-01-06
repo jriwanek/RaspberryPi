@@ -440,7 +440,7 @@ def to_hex(string):
     try:
         processed = BitArray(hex=string.rstrip('\r\n'))
         return processed
-    except:
+    except CreationError:
         print('Invalid data')
 
 def get_data(loc):
