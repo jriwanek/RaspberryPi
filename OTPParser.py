@@ -39,7 +39,7 @@ except ImportError:
     sys.exit('OTPParser requires future!')
 
 try:
-    from builtins import hex, int, open, range, str
+    from builtins import dict, hex, int, open, range, str
 except ImportError:
     sys.exit("OTPParser requires future! (Cant import 'builtins'")
 
