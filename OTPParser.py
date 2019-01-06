@@ -1,4 +1,25 @@
 #!/usr/bin/python
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
+
+try:
+    from future import standard_library
+    standard_library.install_aliases()
+except ImportError:
+    print('OTPParser requires future!')
+
+
+
+from builtins import hex
+from builtins import int
+from builtins import open
+from builtins import range
+from builtins import str
+import sys
+import os.path
+
 """Raspberry Pi OTP Dump Parser
 
  Copyright 2019 Jasmine Iwanek & Dylan Morrison
@@ -23,22 +44,9 @@
  call either ./OTPParser.py <filename> or vgcencmd otp_dump | OTPParser
 """
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-from __future__ import unicode_literals
-from builtins import hex
-from builtins import int
-from builtins import open
-from builtins import range
-from builtins import str
-import sys
-import os.path
-try:
-    from future import standard_library
-    standard_library.install_aliases()
-except ImportError:
-    print('OTPParser requires future!')
+class TypoError(Exception):
+    pass
+ 
 try:
     from bitstring import BitArray
     from bitstring import CreationError
@@ -461,10 +469,14 @@ def __read_otp_inner(myfile):
     """Inner part of OTP file reader."""
     for line in myfile:
         try:
+            if "Command not registered" in line:
+                raise TypoError
             unprocessed = line.split(':', 1)[1]
             DATA.append(unprocessed.rstrip('\r\n'))
         except IndexError:
             sys.exit('Invalid OTP Dump')
+        except TypoError:
+            sys.exit("Invalid OTP Dump. Please run 'vcgencmd otp_dump' to create file.")
 
 read_otp()
 process_bootmode()
