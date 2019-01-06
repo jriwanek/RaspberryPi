@@ -1,25 +1,4 @@
 #!/usr/bin/python
-from __future__ import absolute_import, division, print_function, unicode_literals
-
-import sys
-from string import hexdigits
-
-if (sys.version_info < (2, 7) or (sys.version_info >= (3, 0) and sys.version_info < (3, 3))):
-    sys.exit("OTPParser requires Python 2.7 or 3.3 and newer.")
-
-try:
-    from future import standard_library
-    standard_library.install_aliases()
-except ImportError:
-    sys.exit('OTPParser requires future!')
-
-try: 
-    from builtins import hex, int, open, range, str
-except ImportError:
-    sys.exit("OTPParser requires future! (can't import 'builtins')")
-
-from os import path
-
 """Raspberry Pi OTP Dump Parser
 
  Copyright 2019 Jasmine Iwanek & Dylan Morrison
@@ -44,9 +23,30 @@ from os import path
  call either ./OTPParser.py <filename> or vgcencmd otp_dump | OTPParser
 """
 
+from __future__ import absolute_import, division, print_function, unicode_literals
+
+import sys
+from string import hexdigits
+from os import path
+
+if (sys.version_info < (2, 7) or (sys.version_info >= (3, 0) and sys.version_info < (3, 3))):
+    sys.exit('OTPParser requires Python 2.7 or 3.3 and newer.')
+
+try:
+    from future import standard_library
+    standard_library.install_aliases()
+except ImportError:
+    sys.exit('OTPParser requires future!')
+
+try:
+    from builtins import hex, int, open, range, str
+except ImportError:
+    sys.exit("OTPParser requires future! (Cant import 'builtins'")
+
 class TypoError(Exception):
+    """TypoError exception."""
     pass
- 
+
 try:
     from bitstring import BitArray
     from bitstring import CreationError
@@ -155,24 +155,24 @@ BOARD_REVISIONS = {
 BOARD_REVISIONS_AS_STRING = {v: k for k, v in list(BOARD_REVISIONS.items())}
 
 LEGACY_REVISIONS = {
-    '00010': { 'memory_size': '256', 'manufacturer': 'Egoman', 'processor': 'BCM2835', 'board_type': 'B', 'board_revision': '1.0' }, 
-    '00011': { 'memory_size': '256', 'manufacturer': 'Egoman', 'processor': 'BCM2835', 'board_type': 'B', 'board_revision': '1.0' }, 
-    '00100': { 'memory_size': '256', 'manufacturer': 'Sony UK', 'processor': 'BCM2835', 'board_type': 'B', 'board_revision': '2.0' },
-    '00101': { 'memory_size': '256', 'manufacturer': 'Qisda', 'processor': 'BCM2835', 'board_type': 'B', 'board_revision': '2.0' },
-    '00110': { 'memory_size': '256', 'manufacturer': 'Egoman', 'processor': 'BCM2835', 'board_type': 'B', 'board_revision': '2.0' },
-    '00111': { 'memory_size': '256', 'manufacturer': 'Egoman', 'processor': 'BCM2835', 'board_type': 'A', 'board_revision': '2.0' },
-    '01000': { 'memory_size': '256', 'manufacturer': 'Sony UK', 'processor': 'BCM2835', 'board_type': 'A', 'board_revision': '2.0' },
-    '01001': { 'memory_size': '256', 'manufacturer': 'Qisda', 'processor': 'BCM2835', 'board_type': 'A', 'board_revision': '2.0' },
-    '01101': { 'memory_size': '512', 'manufacturer': 'Egoman', 'processor': 'BCM2835', 'board_type': 'B', 'board_revision': '2.0' },
-    '01110': { 'memory_size': '512', 'manufacturer': 'Sony UK', 'processor': 'BCM2835', 'board_type': 'B', 'board_revision': '2.0' },
-    '01111': { 'memory_size': '512', 'manufacturer': 'Egoman', 'processor': 'BCM2835', 'board_type': 'B', 'board_revision': '2.0' },
-    '10000': { 'memory_size': '512', 'manufacturer': 'Sony UK', 'processor': 'BCM2835', 'board_type': 'B+', 'board_revision': '1.0' },
-    '10001': { 'memory_size': '512', 'manufacturer': 'Sony UK', 'processor': 'BCM2835', 'board_type': 'CM1', 'board_revision': '1.0' },
-    '10010': { 'memory_size': '512', 'manufacturer': 'Sony UK', 'processor': 'BCM2835', 'board_type': 'A+', 'board_revision': '1.1' },
-    '10011': { 'memory_size': '512', 'manufacturer': 'Embest', 'processor': 'BCM2835', 'board_type': 'B+', 'board_revision': '1.2' },
-    '10100': { 'memory_size': '512', 'manufacturer': 'Embest', 'processor': 'BCM2835', 'board_type': 'CM1', 'board_revision': '1.0' },
-    '10101': { 'memory_size': '256/512', 'manufacturer': 'Embest', 'processor': 'BCM2835', 'board_type': 'A+', 'board_revision': '1.1' },
-    'default': { 'memory_size': 'unknown', 'manufacturer': 'unknown', 'processor': 'unknown', 'board_type': 'unknown', 'board_revision': 'unknown' },
+    '00010': {'memory_size': '256', 'manufacturer': 'Egoman', 'processor': 'BCM2835', 'board_type': 'B', 'board_revision': '1.0'},
+    '00011': {'memory_size': '256', 'manufacturer': 'Egoman', 'processor': 'BCM2835', 'board_type': 'B', 'board_revision': '1.0'},
+    '00100': {'memory_size': '256', 'manufacturer': 'Sony UK', 'processor': 'BCM2835', 'board_type': 'B', 'board_revision': '2.0'},
+    '00101': {'memory_size': '256', 'manufacturer': 'Qisda', 'processor': 'BCM2835', 'board_type': 'B', 'board_revision': '2.0'},
+    '00110': {'memory_size': '256', 'manufacturer': 'Egoman', 'processor': 'BCM2835', 'board_type': 'B', 'board_revision': '2.0'},
+    '00111': {'memory_size': '256', 'manufacturer': 'Egoman', 'processor': 'BCM2835', 'board_type': 'A', 'board_revision': '2.0'},
+    '01000': {'memory_size': '256', 'manufacturer': 'Sony UK', 'processor': 'BCM2835', 'board_type': 'A', 'board_revision': '2.0'},
+    '01001': {'memory_size': '256', 'manufacturer': 'Qisda', 'processor': 'BCM2835', 'board_type': 'A', 'board_revision': '2.0'},
+    '01101': {'memory_size': '512', 'manufacturer': 'Egoman', 'processor': 'BCM2835', 'board_type': 'B', 'board_revision': '2.0'},
+    '01110': {'memory_size': '512', 'manufacturer': 'Sony UK', 'processor': 'BCM2835', 'board_type': 'B', 'board_revision': '2.0'},
+    '01111': {'memory_size': '512', 'manufacturer': 'Egoman', 'processor': 'BCM2835', 'board_type': 'B', 'board_revision': '2.0'},
+    '10000': {'memory_size': '512', 'manufacturer': 'Sony UK', 'processor': 'BCM2835', 'board_type': 'B+', 'board_revision': '1.0'},
+    '10001': {'memory_size': '512', 'manufacturer': 'Sony UK', 'processor': 'BCM2835', 'board_type': 'CM1', 'board_revision': '1.0'},
+    '10010': {'memory_size': '512', 'manufacturer': 'Sony UK', 'processor': 'BCM2835', 'board_type': 'A+', 'board_revision': '1.1'},
+    '10011': {'memory_size': '512', 'manufacturer': 'Embest', 'processor': 'BCM2835', 'board_type': 'B+', 'board_revision': '1.2'},
+    '10100': {'memory_size': '512', 'manufacturer': 'Embest', 'processor': 'BCM2835', 'board_type': 'CM1', 'board_revision': '1.0'},
+    '10101': {'memory_size': '256/512', 'manufacturer': 'Embest', 'processor': 'BCM2835', 'board_type': 'A+', 'board_revision': '1.1'},
+    'default': {'memory_size': 'unknown', 'manufacturer': 'unknown', 'processor': 'unknown', 'board_type': 'unknown', 'board_revision': 'unknown'}
 }
 
 REGIONS = {
@@ -245,11 +245,14 @@ BOARD_REVISION = '0000'
 
 DATA = {}
 
-def is_hex(s): # Credit to eumiro, stackoverflow. https://stackoverflow.com/questions/11592261/check-if-a-string-is-hexadecimal
-     hex_digits = set(hexdigits)
-     # if s is long, then it is faster to check against a set
-     return all(c in hex_digits for c in s)
-     
+def is_hex(string):
+    """Check if the string is hexidecimal.
+    Credit to eumiro, stackoverflow. https://stackoverflow.com/questions/11592261/check-if-a-string-is-hexadecimal
+    """
+    hex_digits = set(hexdigits)
+    # if s is long, then it is faster to check against a set
+    return all(c in hex_digits for c in string)
+
 def unknown_16(name):
     """Handler for region 16."""
     indices = {
@@ -381,9 +384,9 @@ def generate_info_legacy(bits):
     if bits in LEGACY_REVISIONS.keys():
         input_dict = LEGACY_REVISIONS[bits]
     else:
-        input_dict = LEGACY_REVISIONS['default']    
+        input_dict = LEGACY_REVISIONS['default']
     generate_info(MEMORY_SIZES[input_dict['memory_size']], MANUFACTURERS[input_dict['manufacturer']], PROCESSORS[input_dict['processor']], BOARD_TYPES[input_dict['board_type']], BOARD_REVISIONS[input_dict['board_revision']])
-        
+
 def generate_info(memory_size_in, manufacturer_in, processor_in, board_type_in, board_revision_in):
     """Generate information for board revision."""
     global MEMORY_SIZE
@@ -466,14 +469,14 @@ def __read_otp_inner(myfile):
             except ValueError:
                 sys.exit("Invalid OTP Dump (invalid region number '" + line.split(':', 1)[0] + "')")
             data = line.split(':', 1)[1][:8].rstrip('\r\n')
-            
-            try: 
+
+            try:
                 if is_hex(data):
                     DATA[region] = data
                 else:
                     raise ValueError("Reading region " + str(region) + ", string '" + data + "' is not hexadecimal.")
-            except ValueError as e:
-                sys.exit('Invalid OTP Dump (' + str(e) + ')')
+            except ValueError as exception:
+                sys.exit('Invalid OTP Dump (' + str(exception) + ')')
         except IndexError:
             sys.exit('Invalid OTP Dump')
         except TypoError:
@@ -508,7 +511,7 @@ print('                    RAM :', MEMORY_SIZES_AS_STRING[MEMORY_SIZE], "MB")
 print('           Manufacturer :', MANUFACTURERS_AS_STRING[MANUFACTURER])
 print('                    CPU :', PROCESSORS_AS_STRING[PROCESSOR])
 try:
-    TEMP = 'Raspberry Pi Model' + BOARD_TYPES_AS_STRING[BOARD_TYPE]
+    TEMP = 'Raspberry Pi Model ' + BOARD_TYPES_AS_STRING[BOARD_TYPE]
 except KeyError:
     TEMP = 'unknown_' + hex(int(BOARD_TYPE, 2)).lstrip('0x')
 print('             Board Type :', TEMP)
