@@ -41,7 +41,7 @@ except ImportError:
 try:
     from bitstring import BitArray
 except ImportError:
-    print('OTPParser requires bitstring!')
+    sys.exit('OTPParser requires bitstring!')
 
 MEMORY_SIZES = {
     '256':       '000',    # 0
@@ -53,7 +53,7 @@ MEMORY_SIZES = {
     'unknown_6': '110',    # 6
     'unknown_7': '111',    # 7
     '256/512':   'EITHER',
-    'Unknown': ''
+    'unknown': ''
 }
 MEMORY_SIZES_AS_STRING = {v: k for k, v in list(MEMORY_SIZES.items())}
 
@@ -64,18 +64,18 @@ MANUFACTURERS = {
     'Sony Japan': '0011', # 3
     'Embest #2':  '0100', # 4
     'Stadium':    '0101', # 5
-    'Unknown_6':  '0110', # 6
-    'Unknown_7':  '0111', # 7
-    'Unknown_8':  '1000', # 8
-    'Unknown_9':  '1001', # 9
-    'Unknown_a':  '1010', # a
-    'Unknown_b':  '1011', # b
-    'Unknown_c':  '1100', # c
-    'Unknown_d':  '1101', # d
-    'Unknown_e':  '1110', # e
-    'Unknown_f':  '1111', # f
-    'Qisda':      'QISD', # TODO: Correct value unknown
-    'Unknown':    ''
+    'unknown_6':  '0110', # 6
+    'unknown_7':  '0111', # 7
+    'unknown_8':  '1000', # 8
+    'unknown_9':  '1001', # 9
+    'unknown_a':  '1010', # a
+    'unknown_b':  '1011', # b
+    'unknown_c':  '1100', # c
+    'unknown_d':  '1101', # d
+    'unknown_e':  '1110', # e
+    'unknown_f':  '1111', # f
+    'Qisda':      'QISD', # Correct value unknown
+    'unknown':    ''
 }
 MANUFACTURERS_AS_STRING = {v: k for k, v in list(MANUFACTURERS.items())}
 
@@ -83,25 +83,24 @@ PROCESSORS = {
     'BCM2835':   '0000', # 0
     'BCM2836':   '0001', # 1
     'BCM2837':   '0010', # 2
-    'Unknown_3': '0011', # 3
-    'Unknown_4': '0100', # 4
-    'Unknown_5': '0101', # 5
-    'Unknown_6': '0110', # 6
-    'Unknown_7': '0111', # 7
-    'Unknown_8': '1000', # 8
-    'Unknown_9': '1001', # 9
-    'Unknown_a': '1010', # a
-    'Unknown_b': '1011', # b
-    'Unknown_c': '1100', # c
-    'Unknown_d': '1101', # d
-    'Unknown_e': '1110', # e
-    'Unknown_f': '1111', # f
-    'Unknown':   ''
+    'unknown_3': '0011', # 3
+    'unknown_4': '0100', # 4
+    'unknown_5': '0101', # 5
+    'unknown_6': '0110', # 6
+    'unknown_7': '0111', # 7
+    'unknown_8': '1000', # 8
+    'unknown_9': '1001', # 9
+    'unknown_a': '1010', # a
+    'unknown_b': '1011', # b
+    'unknown_c': '1100', # c
+    'unknown_d': '1101', # d
+    'unknown_e': '1110', # e
+    'unknown_f': '1111', # f
+    'unknown':   ''
 
 }
 PROCESSORS_AS_STRING = {v: k for k, v in list(PROCESSORS.items())}
 
-# TODO: This can cause crashes when passed values between 10 and ff
 BOARD_TYPES = {
     'A':         '00000000', # 0
     'B':         '00000001', # 1
@@ -110,38 +109,38 @@ BOARD_TYPES = {
     '2B':        '00000100', # 4
     'Alpha':     '00000101', # 5
     'CM1':       '00000110', # 6
-    'unknown_7': '00000111', # 7 (Not in known use)
+    'Unknown_7': '00000111', # 7 (Not in known use)
     '3B':        '00001000', # 8
     'Zero':      '00001001', # 9
     'CM3':       '00001010', # a
-    'unknown_b': '00001011', # b (Not in known use)
+    'Unknown_b': '00001011', # b (Not in known use)
     'Zero W':    '00001100', # c
     '3B+':       '00001101', # d
     '3A+':       '00001110', # e
-    'Unknown_f': '00001111', # f (Not in known use)
-    'Unknown':   ''
+    'unknown_f': '00001111', # f (Not in known use)
+    'unknown':   ''
 }
 BOARD_TYPES_AS_STRING = {v: k for k, v in list(BOARD_TYPES.items())}
 
 BOARD_REVISIONS = {
-    '1.0':     '0000',
-    '1.1':     '0001',
-    '1.2':     '0010',
-    '1.3':     '0011',
-    'unk_4':   '0100',
-    'unk_5':   '0101',
-    'unk_6':   '0110',
-    'unk_7':   '0111',
-    'unk_8':   '1000',
-    'unk_9':   '1001',
-    'unk_a':   '1010',
-    'unk_b':   '1011',
-    'unk_c':   '1100',
-    'unk_d':   '1101',
-    'unk_e':   '1110',
-    'unk_f':   '1111',
-    '2.0':     ' 2.0', # TODO: Correct Value unknown.
-    'unknown': ''
+    '1.0':       '0000',
+    '1.1':       '0001',
+    '1.2':       '0010',
+    '1.3':       '0011',
+    'unknown_4': '0100',
+    'unknown_5': '0101',
+    'unknown_6': '0110',
+    'unknown_7': '0111',
+    'unknown_8': '1000',
+    'unknown_9': '1001',
+    'unknown_a': '1010',
+    'unknown_b': '1011',
+    'unknown_c': '1100',
+    'unknown_d': '1101',
+    'unknown_e': '1110',
+    'unknown_f': '1111',
+    '2.0':       ' 2.0', # Correct Value unknown.
+    'unknown':   ''
 }
 BOARD_REVISIONS_AS_STRING = {v: k for k, v in list(BOARD_REVISIONS.items())}
 
@@ -448,13 +447,13 @@ def get_hex(loc):
 
 def pretty_string_no_binary(value):
     """Return a pretty OTP etntry (Without binary)."""
-    temp = int(value, 2)
-    return '' + str(temp) + ' (' + hex(temp) + ') '
+    intval = int(value, 2)
+    return '' + str(intval) + ' (' + hex(intval) + ') '
 
 def pretty_string(value):
     """Return a pretty OTP entry."""
-    temp = int(value, 2)
-    return '' + str(temp) + ' (' + hex(temp) + ') ' + value
+    intval = int(value, 2)
+    return '' + str(intval) + ' (' + hex(intval) + ') ' + value
 
 def read_otp():
     """Read OTP from specified file."""
@@ -471,8 +470,11 @@ def read_otp():
 def __read_otp_inner(myfile):
     """Inner part of OTP file reader."""
     for line in myfile:
-        unprocessed = line.split(':', 1)[1]
-        DATA.append(unprocessed.rstrip('\r\n'))
+        try:
+            unprocessed = line.split(':', 1)[1]
+            DATA.append(unprocessed.rstrip('\r\n'))
+        except IndexError:
+            sys.exit('Invalid OTP Dump')
 
 read_otp()
 process_bootmode()
@@ -502,7 +504,11 @@ print('      New Revision Flag :', revision('new_flag'))
 print('                    RAM :', MEMORY_SIZES_AS_STRING[MEMORY_SIZE], "MB")
 print('           Manufacturer :', MANUFACTURERS_AS_STRING[MANUFACTURER])
 print('                    CPU :', PROCESSORS_AS_STRING[PROCESSOR])
-print('             Board Type : Raspberry Pi Model', BOARD_TYPES_AS_STRING[BOARD_TYPE]) # TODO: Check if any of the 4 high bits are set and if they are, handle differently for now.
+try:
+    TEMP = 'Raspberry Pi Model' + BOARD_TYPES_AS_STRING[BOARD_TYPE]
+except KeyError:
+    TEMP = 'unknown_' + hex(int(BOARD_TYPE, 2)).lstrip('0x')
+print('             Board Type :', TEMP)
 print('         Board Revision :', BOARD_REVISIONS_AS_STRING[BOARD_REVISION])
 print('           Batch Number :', get_hex('batch_number'))
 print('Overvolt Protection Bit :', overclock('overvolt_protection'))
