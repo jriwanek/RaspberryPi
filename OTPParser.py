@@ -11,12 +11,16 @@ except ImportError:
     print('OTPParser requires future!')
 
 
+try: 
+	from builtins import hex
+	from builtins import int
+	from builtins import open
+	from builtins import range
+	from builtins import str
+except ImportError:
+	print("OTPParser requires future! (can't import 'builtins')")
 
-from builtins import hex
-from builtins import int
-from builtins import open
-from builtins import range
-from builtins import str
+	
 import sys
 import os.path
 
