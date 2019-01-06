@@ -41,6 +41,7 @@ except ImportError:
     print('OTPParser requires future!')
 try:
     from bitstring import BitArray
+    from bitstring import CreationError
 except ImportError:
     sys.exit('OTPParser requires bitstring!')
 
@@ -306,8 +307,11 @@ def process_serial():
     """Process Serial, Check against Inverse Serial."""
     serial = get_hex('serial_number')
     inverse_serial = get_hex('serial_number_inverted')
-    if (serial ^ inverse_serial) != '0xffffffff':
-        print('Serial failed checksum!')
+    try:
+        if (serial ^ inverse_serial) != '0xffffffff':
+            print('Serial failed checksum!')
+    except TypeError:
+        print('Serial number format invalid!')
 
 def process_revision():
     """Process Revision, Handle depending on wether it's old or new style."""
@@ -424,13 +428,20 @@ def generate_info(memory_size_in, manufacturer_in, processor_in, board_type_in, 
 
 def to_binary(string):
     """Convert string to binary."""
-    processed = BitArray(hex=string.rstrip('\r\n'))
-    return processed.bin
+    try:
+        processed = BitArray(hex=string.rstrip('\r\n'))
+        return processed.bin
+    except CreationError:
+        print('Invalid data')
+    return ''
 
 def to_hex(string):
     """Convert string to hexidecimal"""
-    processed = BitArray(hex=string.rstrip('\r\n'))
-    return processed
+    try:
+        processed = BitArray(hex=string.rstrip('\r\n'))
+        return processed
+    except:
+        print('Invalid data')
 
 def get_data(loc):
     """Get unformatted data from specified OTP region."""
@@ -448,13 +459,19 @@ def get_hex(loc):
 
 def pretty_string_no_binary(value):
     """Return a pretty OTP etntry (Without binary)."""
-    intval = int(value, 2)
-    return '' + str(intval) + ' (' + hex(intval) + ') '
+    try:
+        intval = int(value, 2)
+        return '' + str(intval) + ' (' + hex(intval) + ') '
+    except ValueError:
+        print('Failed to make the string pretty!')
 
 def pretty_string(value):
     """Return a pretty OTP entry."""
-    intval = int(value, 2)
-    return '' + str(intval) + ' (' + hex(intval) + ') ' + value
+    try:
+        intval = int(value, 2)
+        return '' + str(intval) + ' (' + hex(intval) + ') ' + value
+    except ValueError:
+        print('Failed to make the string pretty!')
 
 def read_otp():
     """Read OTP from specified file."""
