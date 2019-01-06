@@ -29,8 +29,8 @@ import sys
 from string import hexdigits
 from os import path
 
-if (sys.version_info < (2, 7) or (sys.version_info >= (3, 0) and sys.version_info < (3, 3))):
-    sys.exit('OTPParser requires Python 2.7 or 3.3 and newer.')
+if (sys.version_info < (2, 6) or (sys.version_info >= (3, 0) and sys.version_info < (3, 3))):
+    sys.exit('OTPParser requires Python 2.6 or 3.3 and newer.')
 
 try:
     from future import standard_library
@@ -43,15 +43,15 @@ try:
 except ImportError:
     sys.exit("OTPParser requires future! (Cant import 'builtins'")
 
-class TypoError(Exception):
-    """TypoError exception."""
-    pass
-
 try:
     from bitstring import BitArray
     from bitstring import CreationError
 except ImportError:
     sys.exit('OTPParser requires bitstring!')
+
+class TypoError(Exception):
+    """TypoError exception."""
+    pass
 
 MEMORY_SIZES = {
     '256':       '000',    # 0
@@ -65,7 +65,7 @@ MEMORY_SIZES = {
     '256/512':   'EITHER',
     'unknown': ''
 }
-MEMORY_SIZES_AS_STRING = {v: k for k, v in list(MEMORY_SIZES.items())}
+MEMORY_SIZES_AS_STRING = dict((v, k) for k, v in MEMORY_SIZES.items())
 
 MANUFACTURERS = {
     'Sony UK':    '0000', # 0
@@ -87,7 +87,7 @@ MANUFACTURERS = {
     'Qisda':      'QISD', # Correct value unknown
     'unknown':    ''
 }
-MANUFACTURERS_AS_STRING = {v: k for k, v in list(MANUFACTURERS.items())}
+MANUFACTURERS_AS_STRING = dict((v, k) for k, v in MANUFACTURERS.items())
 
 PROCESSORS = {
     'BCM2835':   '0000', # 0
@@ -109,7 +109,7 @@ PROCESSORS = {
     'unknown':   ''
 
 }
-PROCESSORS_AS_STRING = {v: k for k, v in list(PROCESSORS.items())}
+PROCESSORS_AS_STRING = dict((v, k) for k, v in PROCESSORS.items())
 
 BOARD_TYPES = {
     'A':         '00000000', # 0
@@ -130,7 +130,7 @@ BOARD_TYPES = {
     'unknown_f': '00001111', # f (Not in known use)
     'unknown':   ''
 }
-BOARD_TYPES_AS_STRING = {v: k for k, v in list(BOARD_TYPES.items())}
+BOARD_TYPES_AS_STRING = dict((v, k) for k, v in BOARD_TYPES.items())
 
 BOARD_REVISIONS = {
     '1.0':       '0000',
@@ -152,7 +152,7 @@ BOARD_REVISIONS = {
     '2.0':       ' 2.0', # Correct Value unknown.
     'unknown':   ''
 }
-BOARD_REVISIONS_AS_STRING = {v: k for k, v in list(BOARD_REVISIONS.items())}
+BOARD_REVISIONS_AS_STRING = dict((v, k) for k, v in BOARD_REVISIONS.items())
 
 LEGACY_REVISIONS = {
     '00010': {'memory_size': '256', 'manufacturer': 'Egoman',
@@ -269,7 +269,7 @@ def is_hex(string):
     https://stackoverflow.com/questions/11592261/check-if-a-string-is-hexadecimal
     """
     hex_digits = set(hexdigits)
-    # if s is long, then it is faster to check against a set
+    # if string is long, then it is faster to check against a set
     return all(c in hex_digits for c in string)
 
 def unknown_16(name):
@@ -367,7 +367,7 @@ def process_serial():
         if (serial ^ inverse_serial) != '0xffffffff':
             print('Serial failed checksum!')
     except TypeError:
-        print('Serial number format invalid!')
+        sys.exit('Serial number format invalid!')
 
 def process_revision():
     """Process Revision, Handle depending on wether it's old or new style."""
@@ -404,7 +404,7 @@ def process_eth_clk_frequency(bit):
 
 def generate_info_legacy(bits):
     """Generate information for legacy board revision."""
-    if bits in list(LEGACY_REVISIONS.keys()):
+    if bits in LEGACY_REVISIONS.keys():
         input_dict = LEGACY_REVISIONS[bits]
     else:
         input_dict = LEGACY_REVISIONS['default']
@@ -433,7 +433,7 @@ def to_binary(string):
         processed = BitArray(hex=string.rstrip('\r\n'))
         return processed.bin
     except CreationError:
-        print('Invalid data')
+        sys.exit('Invalid data')
     return ''
 
 def to_hex(string):
@@ -442,7 +442,7 @@ def to_hex(string):
         processed = BitArray(hex=string.rstrip('\r\n'))
         return processed
     except CreationError:
-        print('Invalid data')
+        sys.exit('Invalid data')
 
 def get_data(loc):
     """Get unformatted data from specified OTP region."""
@@ -463,7 +463,7 @@ def pretty_string_no_binary(value):
         intval = int(value, 2)
         return '' + str(intval) + ' (' + hex(intval) + ') '
     except ValueError:
-        print('Failed to make the string pretty!')
+        sys.exit('Failed to make the string pretty!')
 
 def pretty_string(value):
     """Return a pretty OTP entry."""
@@ -471,7 +471,7 @@ def pretty_string(value):
         intval = int(value, 2)
         return '' + str(intval) + ' (' + hex(intval) + ') ' + value
     except ValueError:
-        print('Failed to make the string pretty!')
+        sys.exit('Failed to make the string pretty!')
 
 def read_otp():
     """Read OTP from specified file."""
@@ -480,8 +480,7 @@ def read_otp():
             with open(sys.argv[1], 'r') as file:
                 __read_otp_inner(file)
         else:
-            print('Unable to open file.')
-            sys.exit()
+            sys.exit('Unable to open file.')
     else: # Use stdin instead.
         __read_otp_inner(sys.stdin)
 
