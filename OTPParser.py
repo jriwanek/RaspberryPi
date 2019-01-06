@@ -2,6 +2,7 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import sys
+from string import hexdigits
 
 if (sys.version_info < (2, 7) or (sys.version_info >= (3, 0) and sys.version_info < (3, 3))):
     sys.exit("OTPParser requires Python 2.7 or 3.3 and newer.")
@@ -223,6 +224,11 @@ BOARD_REVISION = '0000'
 
 DATA = {}
 
+def is_hex(s): # Credit to eumiro, stackoverflow. https://stackoverflow.com/questions/11592261/check-if-a-string-is-hexadecimal
+     hex_digits = set(hexdigits)
+     # if s is long, then it is faster to check against a set
+     return all(c in hex_digits for c in s)
+     
 def unknown_16(name):
     """Handler for region 16."""
     indices = {
@@ -469,8 +475,19 @@ def __read_otp_inner(myfile):
         try:
             if "Command not registered" in line:
                 raise TypoError
-            unprocessed = line.split(':', 1)[1]
-            DATA[int(line.split(':', 1)[0])] = unprocessed.rstrip('\r\n')
+            try:
+                region = int(line.split(':', 1)[0])
+            except ValueError:
+                sys.exit("Invalid OTP Dump (invalid region number '" + line.split(':', 1)[0] + "')")
+            data = line.split(':', 1)[1][:8].rstrip('\r\n')
+            
+            try: 
+                if is_hex(data):
+                    DATA[region] = data
+                else:
+                    raise ValueError("Reading region " + str(region) + ", string '" + data + "' is not hexadecimal.")
+            except ValueError as e:
+                sys.exit('Invalid OTP Dump (' + str(e) + ')')
         except IndexError:
             sys.exit('Invalid OTP Dump')
         except TypoError:
