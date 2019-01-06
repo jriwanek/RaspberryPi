@@ -151,7 +151,7 @@ REGIONS = {
     'unknown_13':             13,
     'unknown_14':             14,
     'unknown_15':             15,
-    'unknown_16':             16, # Usually 00280000, sometimes 242800 or 6c280000, as yet unknown
+    'unknown_16':             16, # Usually 00280000, sometimes 2428000 or 6c28000, as yet unknown
     'bootmode':               17, # BootMode Register
     'bootmode_copy':          18, # Backup copy of BootMode Register
     'unknown_19':             19, # Always ffffffff in tests
@@ -337,70 +337,70 @@ def process_eth_clk_frequency(bit):
 
 def generate_info_legacy(bits):
     """Generate information for legacy board revision."""
-    if bits == '00000':
-        generate_info_from_dict('unknown', 'unknown', 'unknown', 'unknown', 'unknown') # 00 - Unknown Model
-    elif bits == '00001':
-        generate_info_from_dict('unknown', 'unknown', 'unknown', 'unknown', 'unknown') # 01 - Unknown Model
-    elif bits == '00010':
-        generate_info_from_dict('256', 'Egoman', 'BCM2835', 'B', '1.0') # 02
-    elif bits == '00011':
-        generate_info_from_dict('256', 'Egoman', 'BCM2835', 'B', '1.0') # 03
-    elif bits == '00100':
-        generate_info_from_dict('256', 'Sony UK', 'BCM2835', 'B', '2.0') # 04
-    elif bits == '00101':
-        generate_info_from_dict('256', 'Qisda', 'BCM2835', 'B', '2.0') # 05
-    elif bits == '00110':
-        generate_info_from_dict('256', 'Egoman', 'BCM2835', 'B', '2.0') # 06
-    elif bits == '00111':
-        generate_info_from_dict('256', 'Egoman', 'BCM2835', 'A', '2.0') # 07
-    elif bits == '01000':
-        generate_info_from_dict('256', 'Sony UK', 'BCM2835', 'A', '2.0') # 08
-    elif bits == '01001':
-        generate_info_from_dict('256', 'Qisda', 'BCM2835', 'A', '2.0') # 09
-    elif bits == '01010':
-        generate_info_from_dict('unknown', 'unknown', 'unknown', 'unknown', 'unknown') # 0a - Unknown Model
-    elif bits == '01011':
-        generate_info_from_dict('unknown', 'unknown', 'unknown', 'unknown', 'unknown') # 0b - Unknown Model
-    elif bits == '01100':
-        generate_info_from_dict('unknown', 'unknown', 'unknown', 'unknown', 'unknown') # 0c - Unknown Model
-    elif bits == '01101':
-        generate_info_from_dict('512', 'Egoman', 'BCM2835', 'B', '2.0') # 0d
-    elif bits == '01110':
-        generate_info_from_dict('512', 'Sony UK', 'BCM2835', 'B', '2.0') # 0e
-    elif bits == '01111':
-        generate_info_from_dict('512', 'Egoman', 'BCM2835', 'B', '2.0') # 0f
-    elif bits == '10000':
-        generate_info_from_dict('512', 'Sony UK', 'BCM2835', 'B+', '1.0') # 10
-    elif bits == '10001':
-        generate_info_from_dict('512', 'Sony UK', 'BCM2835', 'CM1', '1.0') # 11
-    elif bits == '10010':
-        generate_info_from_dict('512', 'Sony UK', 'BCM2835', 'A+', '1.1') # 12
-    elif bits == '10011':
-        generate_info_from_dict('512', 'Embest', 'BCM2835', 'B+', '1.2') # 13
-    elif bits == '10100':
-        generate_info_from_dict('512', 'Embest', 'BCM2835', 'CM1', '1.0') # 14
-    elif bits == '10101':
-        generate_info_from_dict('256/512', 'Embest', 'BCM2835', 'A+', '1.1') # 15 - This can be 256MB or 512MB.
-    elif bits == '10110':
-        generate_info_from_dict('unknown', 'unknown', 'unknown', 'unknown', 'unknown') # 16 - Unknown Model
-    elif bits == '10111':
-        generate_info_from_dict('unknown', 'unknown', 'unknown', 'unknown', 'unknown') # 17 - Unknown Model
-    elif bits == '11000':
-        generate_info_from_dict('unknown', 'unknown', 'unknown', 'unknown', 'unknown') # 18 - Unknown Model
-    elif bits == '11001':
-        generate_info_from_dict('unknown', 'unknown', 'unknown', 'unknown', 'unknown') # 19 - Unknown Model
-    elif bits == '11010':
-        generate_info_from_dict('unknown', 'unknown', 'unknown', 'unknown', 'unknown') # 1a - Unknown Model
-    elif bits == '11011':
-        generate_info_from_dict('unknown', 'unknown', 'unknown', 'unknown', 'unknown') # 1b - Unknown Model
-    elif bits == '11100':
-        generate_info_from_dict('unknown', 'unknown', 'unknown', 'unknown', 'unknown') # 1c - Unknown Model
-    elif bits == '11101':
-        generate_info_from_dict('unknown', 'unknown', 'unknown', 'unknown', 'unknown') # 1d - Unknown Model
-    elif bits == '11110':
-        generate_info_from_dict('unknown', 'unknown', 'unknown', 'unknown', 'unknown') # 1e - Unknown Model
-    elif bits == '11111':
-        generate_info_from_dict('unknown', 'unknown', 'unknown', 'unknown', 'unknown')  # 1f - Unknown Model
+    if bits == '00000':   # 00 - Unknown Model
+        generate_info_from_dict('unknown', 'unknown', 'unknown', 'unknown', 'unknown')
+    elif bits == '00001': # 01 - Unknown Model
+        generate_info_from_dict('unknown', 'unknown', 'unknown', 'unknown', 'unknown')
+    elif bits == '00010': # 02
+        generate_info_from_dict('256', 'Egoman', 'BCM2835', 'B', '1.0')
+    elif bits == '00011': # 03
+        generate_info_from_dict('256', 'Egoman', 'BCM2835', 'B', '1.0')
+    elif bits == '00100': # 04
+        generate_info_from_dict('256', 'Sony UK', 'BCM2835', 'B', '2.0')
+    elif bits == '00101': # 05
+        generate_info_from_dict('256', 'Qisda', 'BCM2835', 'B', '2.0')
+    elif bits == '00110': # 06
+        generate_info_from_dict('256', 'Egoman', 'BCM2835', 'B', '2.0')
+    elif bits == '00111': # 07
+        generate_info_from_dict('256', 'Egoman', 'BCM2835', 'A', '2.0')
+    elif bits == '01000': # 08
+        generate_info_from_dict('256', 'Sony UK', 'BCM2835', 'A', '2.0')
+    elif bits == '01001': # 09
+        generate_info_from_dict('256', 'Qisda', 'BCM2835', 'A', '2.0')
+    elif bits == '01010': # 0a - Unknown Model
+        generate_info_from_dict('unknown', 'unknown', 'unknown', 'unknown', 'unknown')
+    elif bits == '01011': # 0b - Unknown Model
+        generate_info_from_dict('unknown', 'unknown', 'unknown', 'unknown', 'unknown')
+    elif bits == '01100': # 0c - Unknown Model
+        generate_info_from_dict('unknown', 'unknown', 'unknown', 'unknown', 'unknown')
+    elif bits == '01101': # od
+        generate_info_from_dict('512', 'Egoman', 'BCM2835', 'B', '2.0')
+    elif bits == '01110': # 0e
+        generate_info_from_dict('512', 'Sony UK', 'BCM2835', 'B', '2.0')
+    elif bits == '01111': # 0f
+        generate_info_from_dict('512', 'Egoman', 'BCM2835', 'B', '2.0')
+    elif bits == '10000': # 10
+        generate_info_from_dict('512', 'Sony UK', 'BCM2835', 'B+', '1.0')
+    elif bits == '10001': # 11
+        generate_info_from_dict('512', 'Sony UK', 'BCM2835', 'CM1', '1.0')
+    elif bits == '10010': #12
+        generate_info_from_dict('512', 'Sony UK', 'BCM2835', 'A+', '1.1')
+    elif bits == '10011': # 13
+        generate_info_from_dict('512', 'Embest', 'BCM2835', 'B+', '1.2')
+    elif bits == '10100': # 14
+        generate_info_from_dict('512', 'Embest', 'BCM2835', 'CM1', '1.0')
+    elif bits == '10101': # 15 - This can be 256MB or 512MB
+        generate_info_from_dict('256/512', 'Embest', 'BCM2835', 'A+', '1.1')
+    elif bits == '10110': # 16 - Unknown Model
+        generate_info_from_dict('unknown', 'unknown', 'unknown', 'unknown', 'unknown')
+    elif bits == '10111': # 17 - Unknown Model
+        generate_info_from_dict('unknown', 'unknown', 'unknown', 'unknown', 'unknown')
+    elif bits == '11000': # 18 - Unknown Model
+        generate_info_from_dict('unknown', 'unknown', 'unknown', 'unknown', 'unknown')
+    elif bits == '11001': # 19 - Unknown Model
+        generate_info_from_dict('unknown', 'unknown', 'unknown', 'unknown', 'unknown')
+    elif bits == '11010': # 1a - Unknown Model
+        generate_info_from_dict('unknown', 'unknown', 'unknown', 'unknown', 'unknown')
+    elif bits == '11011': # 1b - Unknown Model
+        generate_info_from_dict('unknown', 'unknown', 'unknown', 'unknown', 'unknown')
+    elif bits == '11100': # 1c - Unknown Model
+        generate_info_from_dict('unknown', 'unknown', 'unknown', 'unknown', 'unknown')
+    elif bits == '11101': # 1d - Unknown Model
+        generate_info_from_dict('unknown', 'unknown', 'unknown', 'unknown', 'unknown')
+    elif bits == '11110': # 1e - Unknown Model
+        generate_info_from_dict('unknown', 'unknown', 'unknown', 'unknown', 'unknown')
+    elif bits == '11111': # 1f - Unknown Model
+        generate_info_from_dict('unknown', 'unknown', 'unknown', 'unknown', 'unknown')
 
 def generate_info_from_dict(memory_size_in, manufacturer_in, processor_in, board_type_in, board_revision_in):
     """Generate information for legacy Board revision (Prettyness wrapper)."""
