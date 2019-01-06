@@ -3,6 +3,9 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 import sys
 
+if (sys.version_info < (2, 7) or (sys.version_info >= (3, 0) and sys.version_info < (3, 3))):
+    sys.exit("OTPParser requires Python 2.7 or 3.3 and newer.")
+
 try:
     from future import standard_library
     standard_library.install_aliases()
@@ -14,7 +17,6 @@ try:
 except ImportError:
     sys.exit("OTPParser requires future! (can't import 'builtins')")
 
-import sys
 from os import path
 
 """Raspberry Pi OTP Dump Parser
