@@ -155,24 +155,42 @@ BOARD_REVISIONS = {
 BOARD_REVISIONS_AS_STRING = {v: k for k, v in list(BOARD_REVISIONS.items())}
 
 LEGACY_REVISIONS = {
-    '00010': {'memory_size': '256', 'manufacturer': 'Egoman', 'processor': 'BCM2835', 'board_type': 'B', 'board_revision': '1.0'},
-    '00011': {'memory_size': '256', 'manufacturer': 'Egoman', 'processor': 'BCM2835', 'board_type': 'B', 'board_revision': '1.0'},
-    '00100': {'memory_size': '256', 'manufacturer': 'Sony UK', 'processor': 'BCM2835', 'board_type': 'B', 'board_revision': '2.0'},
-    '00101': {'memory_size': '256', 'manufacturer': 'Qisda', 'processor': 'BCM2835', 'board_type': 'B', 'board_revision': '2.0'},
-    '00110': {'memory_size': '256', 'manufacturer': 'Egoman', 'processor': 'BCM2835', 'board_type': 'B', 'board_revision': '2.0'},
-    '00111': {'memory_size': '256', 'manufacturer': 'Egoman', 'processor': 'BCM2835', 'board_type': 'A', 'board_revision': '2.0'},
-    '01000': {'memory_size': '256', 'manufacturer': 'Sony UK', 'processor': 'BCM2835', 'board_type': 'A', 'board_revision': '2.0'},
-    '01001': {'memory_size': '256', 'manufacturer': 'Qisda', 'processor': 'BCM2835', 'board_type': 'A', 'board_revision': '2.0'},
-    '01101': {'memory_size': '512', 'manufacturer': 'Egoman', 'processor': 'BCM2835', 'board_type': 'B', 'board_revision': '2.0'},
-    '01110': {'memory_size': '512', 'manufacturer': 'Sony UK', 'processor': 'BCM2835', 'board_type': 'B', 'board_revision': '2.0'},
-    '01111': {'memory_size': '512', 'manufacturer': 'Egoman', 'processor': 'BCM2835', 'board_type': 'B', 'board_revision': '2.0'},
-    '10000': {'memory_size': '512', 'manufacturer': 'Sony UK', 'processor': 'BCM2835', 'board_type': 'B+', 'board_revision': '1.0'},
-    '10001': {'memory_size': '512', 'manufacturer': 'Sony UK', 'processor': 'BCM2835', 'board_type': 'CM1', 'board_revision': '1.0'},
-    '10010': {'memory_size': '512', 'manufacturer': 'Sony UK', 'processor': 'BCM2835', 'board_type': 'A+', 'board_revision': '1.1'},
-    '10011': {'memory_size': '512', 'manufacturer': 'Embest', 'processor': 'BCM2835', 'board_type': 'B+', 'board_revision': '1.2'},
-    '10100': {'memory_size': '512', 'manufacturer': 'Embest', 'processor': 'BCM2835', 'board_type': 'CM1', 'board_revision': '1.0'},
-    '10101': {'memory_size': '256/512', 'manufacturer': 'Embest', 'processor': 'BCM2835', 'board_type': 'A+', 'board_revision': '1.1'},
-    'default': {'memory_size': 'unknown', 'manufacturer': 'unknown', 'processor': 'unknown', 'board_type': 'unknown', 'board_revision': 'unknown'}
+    '00010': {'memory_size': '256', 'manufacturer': 'Egoman',
+              'processor': 'BCM2835', 'board_type': 'B', 'board_revision': '1.0'},
+    '00011': {'memory_size': '256', 'manufacturer': 'Egoman',
+              'processor': 'BCM2835', 'board_type': 'B', 'board_revision': '1.0'},
+    '00100': {'memory_size': '256', 'manufacturer': 'Sony UK',
+              'processor': 'BCM2835', 'board_type': 'B', 'board_revision': '2.0'},
+    '00101': {'memory_size': '256', 'manufacturer': 'Qisda',
+              'processor': 'BCM2835', 'board_type': 'B', 'board_revision': '2.0'},
+    '00110': {'memory_size': '256', 'manufacturer': 'Egoman',
+              'processor': 'BCM2835', 'board_type': 'B', 'board_revision': '2.0'},
+    '00111': {'memory_size': '256', 'manufacturer': 'Egoman',
+              'processor': 'BCM2835', 'board_type': 'A', 'board_revision': '2.0'},
+    '01000': {'memory_size': '256', 'manufacturer': 'Sony UK',
+              'processor': 'BCM2835', 'board_type': 'A', 'board_revision': '2.0'},
+    '01001': {'memory_size': '256', 'manufacturer': 'Qisda',
+              'processor': 'BCM2835', 'board_type': 'A', 'board_revision': '2.0'},
+    '01101': {'memory_size': '512', 'manufacturer': 'Egoman',
+              'processor': 'BCM2835', 'board_type': 'B', 'board_revision': '2.0'},
+    '01110': {'memory_size': '512', 'manufacturer': 'Sony UK',
+              'processor': 'BCM2835', 'board_type': 'B', 'board_revision': '2.0'},
+    '01111': {'memory_size': '512', 'manufacturer': 'Egoman',
+              'processor': 'BCM2835', 'board_type': 'B', 'board_revision': '2.0'},
+    '10000': {'memory_size': '512', 'manufacturer': 'Sony UK',
+              'processor': 'BCM2835', 'board_type': 'B+', 'board_revision': '1.0'},
+    '10001': {'memory_size': '512', 'manufacturer': 'Sony UK',
+              'processor': 'BCM2835', 'board_type': 'CM1', 'board_revision': '1.0'},
+    '10010': {'memory_size': '512', 'manufacturer': 'Sony UK',
+              'processor': 'BCM2835', 'board_type': 'A+', 'board_revision': '1.1'},
+    '10011': {'memory_size': '512', 'manufacturer': 'Embest',
+              'processor': 'BCM2835', 'board_type': 'B+', 'board_revision': '1.2'},
+    '10100': {'memory_size': '512', 'manufacturer': 'Embest',
+              'processor': 'BCM2835', 'board_type': 'CM1', 'board_revision': '1.0'},
+    '10101': {'memory_size': '256/512', 'manufacturer': 'Embest',
+              'processor': 'BCM2835', 'board_type': 'A+', 'board_revision': '1.1'},
+    'default': {'memory_size': 'unknown', 'manufacturer': 'unknown',
+                'processor': 'unknown', 'board_type': 'unknown', 'board_revision': 'unknown'}
 }
 
 REGIONS = {
@@ -247,7 +265,8 @@ DATA = {}
 
 def is_hex(string):
     """Check if the string is hexidecimal.
-    Credit to eumiro, stackoverflow. https://stackoverflow.com/questions/11592261/check-if-a-string-is-hexadecimal
+    Credit to eumiro, stackoverflow:
+    https://stackoverflow.com/questions/11592261/check-if-a-string-is-hexadecimal
     """
     hex_digits = set(hexdigits)
     # if s is long, then it is faster to check against a set
@@ -274,7 +293,7 @@ def bootmode(name):
         'bit_19':        (12, 13), # Enables GPIO bootmode
         'bit_20':        (11, 12), # Sets the bank to check for GPIO bootmode
         'bit_21':        (10, 11), # Enables booting from SD card
-        'bit_22':        (9, 10), # Sets the bank to boot from (That's what Gordon said, I think it means SD Card though)
+        'bit_22':        (9, 10), # Sets the bank to boot from (That's what Gordon said, Unclear)
         'bits_26_to_27': (7, 9), # Unknown/Unused
         'bit_25':        (6, 7), # Unknown (Is set on the Compute Module 3)
         'bits_23_to_24': (4, 6), # Unknown/Unused
@@ -297,7 +316,7 @@ def unknown_27(name):
 def revision(name):
     """Handler for region 30."""
     indices = {
-        'legacy_board_revision': (27, 32), # Region used to store the legacy revision, only use if new_flag is not set. Note: it's actually 8 bits, but only 5 were ever used
+        'legacy_board_revision': (27, 32), # Region used to store the legacy revision
         'board_revision':        (28, 32), # Revision of the board
         'board_type':            (20, 28), # Model of the board
         'processor':             (16, 20), # Installed Processor
@@ -356,7 +375,11 @@ def process_revision():
     if flag == '0':
         generate_info_legacy(revision('legacy_board_revision'))
     elif flag == '1':
-        generate_info(revision('memory_size'), revision('manufacturer'), revision('processor'), revision('board_type'), revision('board_revision'))
+        generate_info(revision('memory_size'),
+                      revision('manufacturer'),
+                      revision('processor'),
+                      revision('board_type'),
+                      revision('board_revision'))
 
 def format_mac():
     """Format MAC Address in a human readalbe fashion."""
@@ -385,7 +408,11 @@ def generate_info_legacy(bits):
         input_dict = LEGACY_REVISIONS[bits]
     else:
         input_dict = LEGACY_REVISIONS['default']
-    generate_info(MEMORY_SIZES[input_dict['memory_size']], MANUFACTURERS[input_dict['manufacturer']], PROCESSORS[input_dict['processor']], BOARD_TYPES[input_dict['board_type']], BOARD_REVISIONS[input_dict['board_revision']])
+    generate_info(MEMORY_SIZES[input_dict['memory_size']],
+                  MANUFACTURERS[input_dict['manufacturer']],
+                  PROCESSORS[input_dict['processor']],
+                  BOARD_TYPES[input_dict['board_type']],
+                  BOARD_REVISIONS[input_dict['board_revision']])
 
 def generate_info(memory_size_in, manufacturer_in, processor_in, board_type_in, board_revision_in):
     """Generate information for board revision."""
