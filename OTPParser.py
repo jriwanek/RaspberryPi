@@ -10,9 +10,9 @@ except ImportError:
     sys.exit('OTPParser requires future!')
 
 try: 
-	from builtins import hex, int, open, range, str
+    from builtins import hex, int, open, range, str
 except ImportError:
-	sys.exit("OTPParser requires future! (can't import 'builtins')")
+    sys.exit("OTPParser requires future! (can't import 'builtins')")
 
 import sys
 from os import path
