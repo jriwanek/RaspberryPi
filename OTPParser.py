@@ -153,6 +153,27 @@ BOARD_REVISIONS = {
 }
 BOARD_REVISIONS_AS_STRING = {v: k for k, v in list(BOARD_REVISIONS.items())}
 
+LEGACY_REVISIONS = {
+    '00010': { 'memory_size': '256', 'manufacturer': 'Egoman', 'processor': 'BCM2835', 'board_type': 'B', 'board_revision': '1.0' }, 
+    '00011': { 'memory_size': '256', 'manufacturer': 'Egoman', 'processor': 'BCM2835', 'board_type': 'B', 'board_revision': '1.0' }, 
+    '00100': { 'memory_size': '256', 'manufacturer': 'Sony UK', 'processor': 'BCM2835', 'board_type': 'B', 'board_revision': '2.0' },
+    '00101': { 'memory_size': '256', 'manufacturer': 'Qisda', 'processor': 'BCM2835', 'board_type': 'B', 'board_revision': '2.0' },
+    '00110': { 'memory_size': '256', 'manufacturer': 'Egoman', 'processor': 'BCM2835', 'board_type': 'B', 'board_revision': '2.0' },
+    '00111': { 'memory_size': '256', 'manufacturer': 'Egoman', 'processor': 'BCM2835', 'board_type': 'A', 'board_revision': '2.0' },
+    '01000': { 'memory_size': '256', 'manufacturer': 'Sony UK', 'processor': 'BCM2835', 'board_type': 'A', 'board_revision': '2.0' },
+    '01001': { 'memory_size': '256', 'manufacturer': 'Qisda', 'processor': 'BCM2835', 'board_type': 'A', 'board_revision': '2.0' },
+    '01101': { 'memory_size': '512', 'manufacturer': 'Egoman', 'processor': 'BCM2835', 'board_type': 'B', 'board_revision': '2.0' },
+    '01110': { 'memory_size': '512', 'manufacturer': 'Sony UK', 'processor': 'BCM2835', 'board_type': 'B', 'board_revision': '2.0' },
+    '01111': { 'memory_size': '512', 'manufacturer': 'Egoman', 'processor': 'BCM2835', 'board_type': 'B', 'board_revision': '2.0' },
+    '10000': { 'memory_size': '512', 'manufacturer': 'Sony UK', 'processor': 'BCM2835', 'board_type': 'B+', 'board_revision': '1.0' },
+    '10001': { 'memory_size': '512', 'manufacturer': 'Sony UK', 'processor': 'BCM2835', 'board_type': 'CM1', 'board_revision': '1.0' },
+    '10010': { 'memory_size': '512', 'manufacturer': 'Sony UK', 'processor': 'BCM2835', 'board_type': 'A+', 'board_revision': '1.1' },
+    '10011': { 'memory_size': '512', 'manufacturer': 'Embest', 'processor': 'BCM2835', 'board_type': 'B+', 'board_revision': '1.2' },
+    '10100': { 'memory_size': '512', 'manufacturer': 'Embest', 'processor': 'BCM2835', 'board_type': 'CM1', 'board_revision': '1.0' },
+    '10101': { 'memory_size': '256/512', 'manufacturer': 'Embest', 'processor': 'BCM2835', 'board_type': 'A+', 'board_revision': '1.1' },
+    'default': { 'memory_size': 'unknown', 'manufacturer': 'unknown', 'processor': 'unknown', 'board_type': 'unknown', 'board_revision': 'unknown' },
+}
+
 REGIONS = {
     'unknown_8':               8,
     'unknown_9':               9,
@@ -351,47 +372,12 @@ def process_eth_clk_frequency(bit):
 
 def generate_info_legacy(bits):
     """Generate information for legacy board revision."""
-    if bits == '00010': # 02
-        generate_info_from_dict('256', 'Egoman', 'BCM2835', 'B', '1.0')
-    elif bits == '00011': # 03
-        generate_info_from_dict('256', 'Egoman', 'BCM2835', 'B', '1.0')
-    elif bits == '00100': # 04
-        generate_info_from_dict('256', 'Sony UK', 'BCM2835', 'B', '2.0')
-    elif bits == '00101': # 05
-        generate_info_from_dict('256', 'Qisda', 'BCM2835', 'B', '2.0')
-    elif bits == '00110': # 06
-        generate_info_from_dict('256', 'Egoman', 'BCM2835', 'B', '2.0')
-    elif bits == '00111': # 07
-        generate_info_from_dict('256', 'Egoman', 'BCM2835', 'A', '2.0')
-    elif bits == '01000': # 08
-        generate_info_from_dict('256', 'Sony UK', 'BCM2835', 'A', '2.0')
-    elif bits == '01001': # 09
-        generate_info_from_dict('256', 'Qisda', 'BCM2835', 'A', '2.0')
-    elif bits == '01101': # od
-        generate_info_from_dict('512', 'Egoman', 'BCM2835', 'B', '2.0')
-    elif bits == '01110': # 0e
-        generate_info_from_dict('512', 'Sony UK', 'BCM2835', 'B', '2.0')
-    elif bits == '01111': # 0f
-        generate_info_from_dict('512', 'Egoman', 'BCM2835', 'B', '2.0')
-    elif bits == '10000': # 10
-        generate_info_from_dict('512', 'Sony UK', 'BCM2835', 'B+', '1.0')
-    elif bits == '10001': # 11
-        generate_info_from_dict('512', 'Sony UK', 'BCM2835', 'CM1', '1.0')
-    elif bits == '10010': #12
-        generate_info_from_dict('512', 'Sony UK', 'BCM2835', 'A+', '1.1')
-    elif bits == '10011': # 13
-        generate_info_from_dict('512', 'Embest', 'BCM2835', 'B+', '1.2')
-    elif bits == '10100': # 14
-        generate_info_from_dict('512', 'Embest', 'BCM2835', 'CM1', '1.0')
-    elif bits == '10101': # 15 - This can be 256MB or 512MB
-        generate_info_from_dict('256/512', 'Embest', 'BCM2835', 'A+', '1.1')
-    else: # Unknown Model
-        generate_info_from_dict('unknown', 'unknown', 'unknown', 'unknown', 'unknown')
-
-def generate_info_from_dict(memory_size_in, manufacturer_in, processor_in, board_type_in, board_revision_in):
-    """Generate information for legacy Board revision (Prettyness wrapper)."""
-    generate_info(MEMORY_SIZES[memory_size_in], MANUFACTURERS[manufacturer_in], PROCESSORS[processor_in], BOARD_TYPES[board_type_in], BOARD_REVISIONS[board_revision_in])
-
+    if bits in LEGACY_REVISIONS.keys():
+        input_dict = LEGACY_REVISIONS[bits]
+    else:
+        input_dict = LEGACY_REVISIONS['default']    
+    generate_info(MEMORY_SIZES[input_dict['memory_size']], MANUFACTURERS[input_dict['manufacturer']], PROCESSORS[input_dict['processor']], BOARD_TYPES[input_dict['board_type']], BOARD_REVISIONS[input_dict['board_revision']])
+        
 def generate_info(memory_size_in, manufacturer_in, processor_in, board_type_in, board_revision_in):
     """Generate information for board revision."""
     global MEMORY_SIZE
