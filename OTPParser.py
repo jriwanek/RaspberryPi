@@ -27,10 +27,11 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
-from builtins import int
 from builtins import hex
+from builtins import int
 from builtins import open
 from builtins import range
+from builtins import str
 import sys
 import os.path
 try:
