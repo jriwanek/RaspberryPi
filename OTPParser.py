@@ -361,8 +361,8 @@ def process_bootmode():
 
 def process_serial():
     """Process Serial, Check against Inverse Serial."""
-    serial = get_hex('serial_number')
-    inverse_serial = get_hex('serial_number_inverted')
+    serial = to_hex('serial_number')
+    inverse_serial = to_hex('serial_number_inverted')
     try:
         if (serial ^ inverse_serial) != '0xffffffff':
             print('Serial failed checksum!')
@@ -427,17 +427,9 @@ def generate_info(memory_size_in, manufacturer_in, processor_in, board_type_in, 
     BOARD_TYPE = board_type_in
     BOARD_REVISION = board_revision_in
 
-def to_binary(string):
-    """Convert string to binary."""
-    try:
-        processed = BitArray(hex=string.rstrip('\r\n'))
-        return processed.bin
-    except CreationError:
-        sys.exit('Invalid data')
-    return ''
-
-def to_hex(string):
+def to_hex(loc):
     """Convert string to hexidecimal"""
+    string = get_data(loc)
     try:
         processed = BitArray(hex=string.rstrip('\r\n'))
         return processed
@@ -451,11 +443,11 @@ def get_data(loc):
 
 def get_binary(loc):
     """Get binary data from specified OTP region."""
-    return to_binary(get_data(loc))
+    return format(int(get_data(loc), 16), '032b').rstrip('\r\n')
 
 def get_hex(loc):
     """Get hexidecimal data from specified OTP region."""
-    return to_hex(get_data(loc))
+    return format(int(get_data(loc), 16), '#08x').rstrip('\r\n')
 
 def pretty_string_no_binary(value):
     """Return a pretty OTP etntry (Without binary)."""
