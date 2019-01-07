@@ -434,21 +434,14 @@ def get_hex(loc):
     """Get hexidecimal data from specified OTP region."""
     return format(int(get_data(loc), 16), '#08x').rstrip('\r\n')
 
-def pretty_string_no_binary(value):
-    """Return a pretty OTP etntry (Without binary)."""
-    try:
-        intval = int(value, 2)
-        return '' + str(intval) + ' (' + hex(intval) + ') '
-    except ValueError:
-        sys.exit('Failed to make the string pretty!')
-
-def pretty_string(value):
+def pretty_string(value, do_binary=True):
     """Return a pretty OTP entry."""
     try:
         intval = int(value, 2)
-        return '' + str(intval) + ' (' + hex(intval) + ') ' + value
+        return '' + str(intval) + ' (' + hex(intval) + ') ' + value if (do_binary == True) else ''		
     except ValueError:
-        sys.exit('Failed to make the string pretty!')
+        print('Failed to make the string pretty!')
+
 
 def read_otp():
     """Read OTP from specified file."""
@@ -533,9 +526,9 @@ print('  Codec License Key One :', get_hex('codec_key_one'))
 print('  Codec License Key Two :', get_hex('codec_key_two'))
 print('            MAC Address :', format_mac())
 print('          Advanced Boot :', get_hex('advanced_boot'), get_binary('advanced_boot'))
-print('     ETH_CLK Output Pin :', pretty_string_no_binary(advanced_boot('bits_0_to_6')))
+print('     ETH_CLK Output Pin :', pretty_string(advanced_boot('bits_0_to_6')), False)
 print(' ETH_CLK Output Enabled :', advanced_boot('bit_7'))
-print('     LAN_RUN Output Pin :', pretty_string_no_binary(advanced_boot('bits_8_to_14')))
+print('     LAN_RUN Output Pin :', pretty_string(advanced_boot('bits_8_to_14')), False)
 print(' LAN_RUN Output Enabled :', advanced_boot('bit_15'))
 print('        USB Hub Timeout :', process_hub_timeout(advanced_boot('bit_24')))
 print('      ETH_CLK Frequency :', process_eth_clk_frequency(advanced_boot('bit_25')))
