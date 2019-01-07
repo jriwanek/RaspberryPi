@@ -43,12 +43,6 @@ try:
 except ImportError:
     sys.exit("OTPParser requires future! (Cant import 'builtins'")
 
-try:
-    from bitstring import BitArray
-    from bitstring import CreationError
-except ImportError:
-    sys.exit('OTPParser requires bitstring!')
-
 class TypoError(Exception):
     """TypoError exception."""
     pass
@@ -361,10 +355,10 @@ def process_bootmode():
 
 def process_serial():
     """Process Serial, Check against Inverse Serial."""
-    serial = to_hex('serial_number')
-    inverse_serial = to_hex('serial_number_inverted')
+    serial = get_hex('serial_number')
+    inverse_serial = get_hex('serial_number_inverted')
     try:
-        if (serial ^ inverse_serial) != '0xffffffff':
+        if (int(serial, 16) ^ int(inverse_serial, 16)) != int('0xffffffff', 16):
             print('Serial failed checksum!')
     except TypeError:
         sys.exit('Serial number format invalid!')
@@ -426,15 +420,6 @@ def generate_info(memory_size_in, manufacturer_in, processor_in, board_type_in, 
     PROCESSOR = processor_in
     BOARD_TYPE = board_type_in
     BOARD_REVISION = board_revision_in
-
-def to_hex(loc):
-    """Convert string to hexidecimal"""
-    string = get_data(loc)
-    try:
-        processed = BitArray(hex=string.rstrip('\r\n'))
-        return processed
-    except CreationError:
-        sys.exit('Invalid data')
 
 def get_data(loc):
     """Get unformatted data from specified OTP region."""
