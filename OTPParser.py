@@ -249,11 +249,13 @@ REGIONS = {
     'advanced_boot':          66  # Advanced Boot Register
 }
 
-MEMORY_SIZE = '000'
-MANUFACTURER = '0000'
-PROCESSOR = '0000'
-BOARD_TYPE = '00000000'
-BOARD_REVISION = '0000'
+BOARD = {
+    'memory': '000',
+    'manufacturer': '0000',
+    'processor': '0000',
+    'type': '00000000',
+    'revision': '0000'
+}
 
 DATA = {}
 
@@ -376,7 +378,7 @@ def process_revision():
                       revision('board_revision'))
 
 def format_mac():
-    """Format MAC Address in a human readalbe fashion."""
+    """Format MAC Address in a human readable fashion."""
     mac_part_1 = get_data('mac_address_one')
     mac_part_2 = get_data('mac_address_two')
     if not mac_part_1 == '00000000':
@@ -409,17 +411,12 @@ def generate_info_legacy(bits):
                   BOARD_REVISIONS[input_dict['board_revision']])
 
 def generate_info(memory_size_in, manufacturer_in, processor_in, board_type_in, board_revision_in):
-    """Generate information for board revision."""
-    global MEMORY_SIZE
-    global MANUFACTURER
-    global PROCESSOR
-    global BOARD_TYPE
-    global BOARD_REVISION
-    MEMORY_SIZE = memory_size_in
-    MANUFACTURER = manufacturer_in
-    PROCESSOR = processor_in
-    BOARD_TYPE = board_type_in
-    BOARD_REVISION = board_revision_in
+    """Generate information from board revision."""
+    BOARD['memory'] = memory_size_in
+    BOARD['manufacturer'] = manufacturer_in
+    BOARD['processor'] = processor_in
+    BOARD['type'] = board_type_in
+    BOARD['revision'] = board_revision_in
 
 def get_data(loc):
     """Get unformatted data from specified OTP region."""
@@ -428,20 +425,19 @@ def get_data(loc):
 
 def get_binary(loc):
     """Get binary data from specified OTP region."""
-    return format(int(get_data(loc), 16), '032b').rstrip('\r\n')
+    return format(int(get_data(loc), 16), '032b')
 
 def get_hex(loc):
     """Get hexidecimal data from specified OTP region."""
-    return format(int(get_data(loc), 16), '#08x').rstrip('\r\n')
+    return format(int(get_data(loc), 16), '#08x')
 
 def pretty_string(value, do_binary=True):
     """Return a pretty OTP entry."""
     try:
         intval = int(value, 2)
-        return '' + str(intval) + ' (' + hex(intval) + ') ' + value if (do_binary == True) else ''		
+        return '' + str(intval) + ' (' + hex(intval) + ') ' + value if (do_binary) else ''
     except ValueError:
-        print('Failed to make the string pretty!')
-
+        sys.exit('Failed to make the string pretty!')
 
 def read_otp():
     """Read OTP from specified file."""
@@ -503,15 +499,11 @@ print('          Serial Number :', get_hex('serial_number'))
 print('  Inverse Serial Number :', get_hex('serial_number_inverted'))
 print('        Revision Number :', get_hex('revision_number'))
 print('      New Revision Flag :', revision('new_flag'))
-print('                    RAM :', MEMORY_SIZES_AS_STRING[MEMORY_SIZE], "MB")
-print('           Manufacturer :', MANUFACTURERS_AS_STRING[MANUFACTURER])
-print('                    CPU :', PROCESSORS_AS_STRING[PROCESSOR])
-try:
-    TEMP = 'Raspberry Pi Model ' + BOARD_TYPES_AS_STRING[BOARD_TYPE]
-except KeyError:
-    TEMP = 'unknown_' + hex(int(BOARD_TYPE, 2)).lstrip('0x')
-print('             Board Type :', TEMP)
-print('         Board Revision :', BOARD_REVISIONS_AS_STRING[BOARD_REVISION])
+print('                    RAM :', MEMORY_SIZES_AS_STRING[BOARD['memory']], "MB")
+print('           Manufacturer :', MANUFACTURERS_AS_STRING[BOARD['manufacturer']])
+print('                    CPU :', PROCESSORS_AS_STRING[BOARD['processor']])
+print('             Board Type :', 'Raspberry Pi Model ' + BOARD_TYPES_AS_STRING[BOARD['type']])
+print('         Board Revision :', BOARD_REVISIONS_AS_STRING[BOARD['revision']])
 print('           Batch Number :', get_hex('batch_number'))
 print('Overvolt Protection Bit :', overclock('overvolt_protection'))
 print('    Customer Region One :', get_hex('customer_one'))
