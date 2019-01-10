@@ -279,7 +279,7 @@ def unknown_16(name):
         'bits_16_to_23': (8, 16),  # only 0x28 seen thus far
         'bits_24_to_31': (0, 8)    # 0x24 & 0x6c seen here thus far
     }[name]
-    __unknown_16 = get_binary('unknown_16')
+    __unknown_16 = get('unknown_16', 'binary')
     return __unknown_16[indices[0]: indices[1]]
 
 
@@ -302,7 +302,7 @@ def bootmode(name):
         'bit_29':        (2, 3),    # Enables USB host booting (Ethernet and Mass Storage)
         'bits_30_31':    (0, 2)     # Unknown/Unused
     }[name]
-    __bootmode = get_binary('bootmode')
+    __bootmode = get('bootmode', 'binary')
     return __bootmode[indices[0]: indices[1]]
 
 
@@ -312,7 +312,7 @@ def unknown_27(name):
         'bits_0_to_15':  (16, 32),  # 5050 (1B, 2B 1.1), 7373 (2B 1.2), 2727(CM3), 1f1f (3B+)
         'bits_16_to_31': (0, 16)
     }[name]
-    __unknown_27 = get_binary('unknown_27')
+    __unknown_27 = get('unknown_27', 'binary')
     return __unknown_27[indices[0]: indices[1]]
 
 
@@ -328,7 +328,7 @@ def revision(name):
         'new_flag':              (8, 9),    # If set, this board uses the new versioning scheme
         'bits_24_to_31':         (0, 8)     # Unused
     }[name]
-    __revision = get_binary('revision_number')
+    __revision = get('revision_number', 'binary')
     return __revision[indices[0]: indices[1]]
 
 
@@ -338,7 +338,7 @@ def overclock(name):
         'overvolt_protection': (31, 32),  # Overvolt protection bit
         'bits_0_to_30':        (0, 31)    # Unknown/Unused
     }[name]
-    __overclock = get_binary('overclock')
+    __overclock = get('overclock', 'binary')
     return __overclock[indices[0]: indices[1]]
 
 
@@ -354,22 +354,22 @@ def advanced_boot(name):
         'bit_25':        (6, 7),    # ETH_CLK Frequency (0 = 25MHz, 1 = 24MHz)
         'bits_26_to_31': (0, 6)     # Unknown/Unused
     }[name]
-    __advanced_boot = get_binary('advanced_boot')
+    __advanced_boot = get('advanced_boot', 'binary')
     return __advanced_boot[indices[0]: indices[1]]
 
 
 def process_bootmode():
     """Process bootmode, Check against the backup."""
-    bootmode_primary = get_binary('bootmode')
-    bootmode_copy = get_binary('bootmode_copy')
+    bootmode_primary = get('bootmode', 'binary')
+    bootmode_copy = get('bootmode_copy', 'binary')
     if bootmode_primary != bootmode_copy:
         print('Bootmode fields are not the same, this is a bad thing!')
 
 
 def process_serial():
     """Process Serial, Check against Inverse Serial."""
-    serial = get_hex('serial_number')
-    inverse_serial = get_hex('serial_number_inverted')
+    serial = get('serial_number', 'hex')
+    inverse_serial = get('serial_number_inverted', 'hex')
     try:
         if (int(serial, 16) ^ int(inverse_serial, 16)) != int('0xffffffff', 16):
             print('Serial failed checksum!')
@@ -392,8 +392,8 @@ def process_revision():
 
 def format_mac():
     """Format MAC Address in a human readable fashion."""
-    mac_part_1 = get_data('mac_address_one')
-    mac_part_2 = get_data('mac_address_two')
+    mac_part_1 = get('mac_address_one', 'raw')
+    mac_part_2 = get('mac_address_two', 'raw')
     if not mac_part_1 == '00000000':
         mac = mac_part_1 + mac_part_2
         return ':'.join(mac[i:i+2] for i in range(0, 12, 2))
@@ -436,21 +436,21 @@ def generate_info(memory_size_in, manufacturer_in, processor_in, board_type_in, 
     BOARD['revision'] = board_revision_in
 
 
-def get_data(loc):
-    """Get unformatted data from specified OTP region."""
+def get(loc, specifier='raw'):
+    """Get data from specified OTP region.
+    Specifier determines whether it is returned 'raw', in 'binary', in 'octal', or in 'hex'adecmimal."""
     region = REGIONS[loc]
-    return DATA[region]
-
-
-def get_binary(loc):
-    """Get binary data from specified OTP region."""
-    return format(int(get_data(loc), 16), '032b')
-
-
-def get_hex(loc):
-    """Get hexidecimal data from specified OTP region."""
-    return format(int(get_data(loc), 16), '#08x')
-
+    if specifier == 'raw':
+        return DATA[region]
+    elif specifier == 'binary':
+        return format(int(DATA[region], 16), '032b')
+    elif specifier == 'hex':
+        return format(int(DATA[region], 16), '#010x')
+    elif specifier == 'octal':
+        #TODO: Ask jas for more details on what she wants the octal output to look like.
+        return format(int(DATA[region], 16), '#018o')
+    else:
+        raise ValueError("Invalid flag.")    
 
 def pretty_string(value, do_binary=True):
     """Return a pretty OTP entry."""
@@ -506,8 +506,8 @@ process_revision()
 print('  OTP Region 16 ( 0-23) :', pretty_string(unknown_16('bits_0_to_15')))
 print('  OTP Region 16 (24-27) :', pretty_string(unknown_16('bits_16_to_23')))
 print('  OTP Region 16 (28-31) :', pretty_string(unknown_16('bits_24_to_31')))
-print('               Bootmode :', get_hex('bootmode'), get_binary('bootmode'))
-print('        Bootmode - Copy :', get_hex('bootmode_copy'))
+print('               Bootmode :', get('bootmode', 'hex'), get('bootmode', 'binary'))
+print('        Bootmode - Copy :', get('bootmode_copy', 'hex'))
 print('  OSC Frequency 19.2MHz :', bootmode('bit_1'))
 print('    SDIO Pullup Enabled :', bootmode('bit_3'))
 print('          GPIO Bootmode :', bootmode('bit_19'))
@@ -519,29 +519,29 @@ print('USB Device Boot Enabled :', bootmode('bit_28'))
 print('  USB Host Boot Enabled :', bootmode('bit_29'))
 print('  OTP Region 27 ( 0-15) :', pretty_string(unknown_27('bits_0_to_15')))
 print('  OTP Region 27 (16-31) :', pretty_string(unknown_27('bits_16_to_31')))
-print('          Serial Number :', get_hex('serial_number'))
-print('  Inverse Serial Number :', get_hex('serial_number_inverted'))
-print('        Revision Number :', get_hex('revision_number'))
+print('          Serial Number :', get('serial_number', 'hex'))
+print('  Inverse Serial Number :', get('serial_number_inverted', 'hex'))
+print('        Revision Number :', get('revision_number', 'hex'))
 print('      New Revision Flag :', revision('new_flag'))
 print('                    RAM :', MEMORY_SIZES_AS_STRING[BOARD['memory']], "MB")
 print('           Manufacturer :', MANUFACTURERS_AS_STRING[BOARD['manufacturer']])
 print('                    CPU :', PROCESSORS_AS_STRING[BOARD['processor']])
 print('             Board Type :', 'Raspberry Pi Model ' + BOARD_TYPES_AS_STRING[BOARD['type']])
 print('         Board Revision :', BOARD_REVISIONS_AS_STRING[BOARD['revision']])
-print('           Batch Number :', get_hex('batch_number'))
+print('           Batch Number :', get('batch_number', 'hex'))
 print('Overvolt Protection Bit :', overclock('overvolt_protection'))
-print('    Customer Region One :', get_hex('customer_one'))
-print('    Customer Region Two :', get_hex('customer_two'))
-print('  Customer Region Three :', get_hex('customer_three'))
-print('   Customer Region Four :', get_hex('customer_four'))
-print('   Customer Region Five :', get_hex('customer_five'))
-print('    Customer Region Six :', get_hex('customer_six'))
-print('  Customer Region Seven :', get_hex('customer_seven'))
-print('  Customer Region Eight :', get_hex('customer_eight'))
-print('  Codec License Key One :', get_hex('codec_key_one'))
-print('  Codec License Key Two :', get_hex('codec_key_two'))
+print('    Customer Region One :', get('customer_one', 'hex'))
+print('    Customer Region Two :', get('customer_two', 'hex'))
+print('  Customer Region Three :', get('customer_three', 'hex'))
+print('   Customer Region Four :', get('customer_four', 'hex'))
+print('   Customer Region Five :', get('customer_five', 'hex'))
+print('    Customer Region Six :', get('customer_six', 'hex'))
+print('  Customer Region Seven :', get('customer_seven', 'hex'))
+print('  Customer Region Eight :', get('customer_eight', 'hex'))
+print('  Codec License Key One :', get('codec_key_one', 'hex'))
+print('  Codec License Key Two :', get('codec_key_two', 'hex'))
 print('            MAC Address :', format_mac())
-print('          Advanced Boot :', get_hex('advanced_boot'), get_binary('advanced_boot'))
+print('          Advanced Boot :', get('advanced_boot', 'hex'), get('advanced_boot', 'binary'))
 print('     ETH_CLK Output Pin :', pretty_string(advanced_boot('bits_0_to_6'), False))
 print(' ETH_CLK Output Enabled :', advanced_boot('bit_7'))
 print('     LAN_RUN Output Pin :', pretty_string(advanced_boot('bits_8_to_14'), False))
