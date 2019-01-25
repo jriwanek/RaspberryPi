@@ -13,7 +13,8 @@
 #define conv_hexdigit(x) (is_hexdigit((x))?is_digit((x))?(x) - 0:to_lower((x)) - 'W':0)
 
 void out_char(const unsigned char ch) {
-  if(ch== 0x0A) out_char(0x0D);
+  if(ch == 0) return;
+  if(ch == 0x0A) out_char(0x0D);
   // wait for the buffer to have space
   while(!(AUX_MU_LSR_REG & 0x20)) ;
     
