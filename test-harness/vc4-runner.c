@@ -14,7 +14,7 @@ void main() {
   volatile unsigned int vers;
 
   setup_uart(BAUD_RATE);
-  xprintf("@dshadowwolf and @jriwaneks RPi reverse-engineering test harness\n"
+  xprintf("\n\n@dshadowwolfs and @jriwaneks RPi reverse-engineering test harness\n"
 	  "Vesion 1.0-alpha1, (c) 2019 Daniel \"DshadowWolf\" Hazelton and Jasmine \"jriwanek\" Iwanek\n"
 	  "Open Source - Released under the MIT License, see https://opensource.org/licenses/MIT\n");
   tests();
@@ -24,5 +24,7 @@ void main() {
 void tests() {
   test_version();
   test_btest();
+  dump_otp_regs();
+  dump_otp_data();
 }
 
