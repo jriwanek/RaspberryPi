@@ -1,3 +1,4 @@
+#include "system_defs.h"
 #include "test-support.h"
 #include "vc4-stdlib.h"
 
@@ -13,18 +14,68 @@ void test_btest() {
   xprintf("btest non-match sr: %x\nbtest match sr: %x\nbtest match sign-bit sr: %x\n", no_match, match, ztest);
 }
 
-void get_otp_reg() {
-}
-
-void dump_otp_data() {
+void otp_wait(unsigned int cyc) {
+  int c = 0;
+  while( c < cyc ) c++;
 }
 
 void wake_otp() {
-}
-
-void dump_otp_regs() {
+  OTP_CONFIG_REG = 3;
+  otp_wait(0x14);
+  OTP_CTRL_LO_REG = 0;
+  OTP_CTRL_HI_REG = 0;
+  otp_wait(0x14);
+  OTP_CONFIG_REG = 2;
+  otp_wait(0x14);
 }
 
 void sleep_otp() {
+  OTP_CTRL_LO_REG = 0;
+  OTP_CTRL_HI_REG = 0;
+  otp_wait(0x14);
+  OTP_CONFIG_REG = 0;
 }
 
+void dump_otp_data() {
+  wake_otp();
+  xprintf("OTP DATA DUMP:\n");
+  for(int i = 0; i < 0x80; i++) {
+    int reg;
+    OTP_ADDR_REG = i;
+    otp_wait(0x14);
+    OTP_CTRL_HI_REG = 0;
+    OTP_CTRL_LO_REG = 0;
+    otp_wait(0x28);
+    int r = OTP_CTRL_LO_REG;
+    OTP_CTRL_LO_REG = 1;
+    r = OTP_CTRL_LO_REG;
+    while((OTP_STATUS_REG &1)==0) ;
+    reg = OTP_DATA_REG;
+    xprintf("%08u: %08x\n", i, reg);
+  }
+  sleep_otp();
+}
+
+void dump_otp_regs() {
+  xprintf("OTP REGISTER DUMP:\n");
+  xprintf("\tBOOTMODE: %08x\n\tCONFIG: %08x\n", OTP_BOOTMODE_REG, OTP_CONFIG_REG);
+  xprintf("\tCTRL_LO: %08x\n\tCNTRL_HI: %08x\n", OTP_CTRL_LO_REG, OTP_CTRL_HI_REG);
+  xprintf("\tBITSEL: %08x\n\tDATA: %08x\n", OTP_BITSEL_REG, OTP_DATA_REG);
+  xprintf("\tADDR: %08x\n\tWRITE_DATA_READ: %08x\n", OTP_ADDR_REG, OTP_WRITE_DATA_READ_REG);
+  xprintf("\tINIT_STATUS: %08x\n", OTP_INIT_STATUS_REG);
+}
+
+#define MEM_AT_OFFSET(addr, base, offset) (*(volatile unsigned int*)((addr)+(base)+(offset)))
+void dump_bootrom() {
+  unsigned int base = 0x60000000;
+  unsigned int max = 0x8000;
+  xprintf("\nBOOTROM DUMP: (%08x to %08x)\n", base, (base+max));
+  for(int i = 0; i < max; i += 16) {
+    int a0 = MEM_AT_OFFSET(base, i, 0);
+    int a4 = MEM_AT_OFFSET(base, i, 4);
+    int a8 = MEM_AT_OFFSET(base, i, 8);
+    int ac =  MEM_AT_OFFSET(base, i, 0xc);
+
+    xprintf("%08x: %08X %08X %08X %08X\n", base + i, a0, a4, a8, ac);
+  }
+}
