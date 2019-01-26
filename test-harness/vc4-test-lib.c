@@ -3,15 +3,17 @@
 #include "vc4-stdlib.h"
 
 void test_version() {
-  xprintf("test of \"version r0\" (or, alternatively, \"mov r0, cpuid\") operation\n");
+  xprintf(">> test of \"version r0\" (or, alternatively, \"mov r0, cpuid\") operation\n");
   unsigned int version = get_version();
-  xprintf("version: %x\n", version);
+  xprintf("version:                 0x%08x\n", version);
 }
 
 void test_btest() {
-  xprintf("test of btest operation and results in various spots\n");
+  xprintf(">> test of btest operation and results in various spots\n");
   volatile unsigned int no_match = btest_run(8,2), match = btest_run(8,3), ztest = btest_run(-127,31);
-  xprintf("btest non-match sr: %x\nbtest match sr: %x\nbtest match sign-bit sr: %x\n", no_match, match, ztest);
+  xprintf("btest non-match sr:      0x%08x\n"
+	  "btest match sr:          0x%08x\n"
+	  "btest match sign-bit sr: 0x%08x\n", no_match, match, ztest);
 }
 
 void otp_wait(unsigned int cyc) {
@@ -51,18 +53,22 @@ void dump_otp_data() {
     r = OTP_CTRL_LO_REG;
     while((OTP_STATUS_REG &1)==0) ;
     reg = OTP_DATA_REG;
-    xprintf("%08u: %08x\n", i, reg);
+    xprintf("%3u: 0x%08x\n", i, reg);
   }
   sleep_otp();
 }
 
 void dump_otp_regs() {
   xprintf("OTP REGISTER DUMP:\n");
-  xprintf("\tBOOTMODE: %08x\n\tCONFIG: %08x\n", OTP_BOOTMODE_REG, OTP_CONFIG_REG);
-  xprintf("\tCTRL_LO: %08x\n\tCNTRL_HI: %08x\n", OTP_CTRL_LO_REG, OTP_CTRL_HI_REG);
-  xprintf("\tBITSEL: %08x\n\tDATA: %08x\n", OTP_BITSEL_REG, OTP_DATA_REG);
-  xprintf("\tADDR: %08x\n\tWRITE_DATA_READ: %08x\n", OTP_ADDR_REG, OTP_WRITE_DATA_READ_REG);
-  xprintf("\tINIT_STATUS: %08x\n", OTP_INIT_STATUS_REG);
+  xprintf("\tBOOTMODE:        0x%08x\n"
+	  "\tCONFIG:          0x%08x\n", OTP_BOOTMODE_REG, OTP_CONFIG_REG);
+  xprintf("\tCTRL_LO:         0x%08x\n"
+	  "\tCNTRL_HI:        0x%08x\n", OTP_CTRL_LO_REG, OTP_CTRL_HI_REG);
+  xprintf("\tBITSEL:          0x%08x\n"
+	  "\tDATA:            0x%08x\n", OTP_BITSEL_REG, OTP_DATA_REG);
+  xprintf("\tADDR:            0x%08x\n"
+	  "\tWRITE_DATA_READ: 0x%08x\n", OTP_ADDR_REG, OTP_WRITE_DATA_READ_REG);
+  xprintf("\tINIT_STATUS:     0x%08x\n", OTP_INIT_STATUS_REG);
 }
 
 #define MEM_AT_OFFSET(addr, base, offset) (*(volatile unsigned int*)((addr)+(base)+(offset)))
@@ -76,6 +82,6 @@ void dump_bootrom() {
     int a8 = MEM_AT_OFFSET(base, i, 8);
     int ac =  MEM_AT_OFFSET(base, i, 0xc);
 
-    xprintf("%08x: %08X %08X %08X %08X\n", base + i, a0, a4, a8, ac);
+    xprintf("0x%08x: %08X %08X %08X %08X\n", base + i, a0, a4, a8, ac);
   }
 }
