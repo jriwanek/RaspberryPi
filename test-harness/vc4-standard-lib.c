@@ -12,6 +12,8 @@
 #define conv_octdigit(x) (is_octal_digit((x))?(x) - '0':(x))
 #define conv_hexdigit(x) (is_hexdigit((x))?is_digit((x))?(x) - 0:to_lower((x)) - 'W':0)
 
+#define MAX_FORMAT_WIDTH 32
+
 void out_char(const unsigned char ch) {
   if(ch == 0) return;
   
@@ -33,7 +35,7 @@ void xprintf(const char *, ...);
 
 static void va_xprintf(const char *fmt, va_list args) {
   unsigned char c;
-  char *p, buff[16];
+  char *p, buff[MAX_FORMAT_WIDTH+1];
   int j, r, i, flags, width;
   
   for(;;) {
@@ -50,26 +52,33 @@ static void va_xprintf(const char *fmt, va_list args) {
     c = *fmt++;
     if(c == '0') {
       flags |= 8;
-      c = *fmt++;
-      while((c - '0') <= 9 && (c - '0') > 0) {
-	width *= 10;
-	width += (c - '0');
-	c = *fmt++;
-      }
+      for( width = 0; c >= '0' && c <= '9'; c = *fmt++)
+	width = width * 10 + (c - '0');
     }
     
     switch(c) {
     case 's':
       p = va_arg(args, char *);
+      if(flags&8) {
+	for(j = 0; p[j]; j++) ;
+	while(j++ < w) out_char(' ');
+      }
       out_string(p);
       continue;
     case 'c':
       out_char((const char)va_arg(args,int));
       continue;
+    case 'D':
+      flags |= 4;
     case 'd':
       flags |= 1;
     case 'u':
     case 'i':
+      r = 10;
+      break;
+    case 'U':
+    case 'I':
+      flags |= 4;
       r = 10;
       break;
     case 'X':
@@ -77,8 +86,13 @@ static void va_xprintf(const char *fmt, va_list args) {
     case 'x':
       r = 16;
       break;
+    case 'O':
+      flags |= 4;
     case 'o':
       r = 8;
+      break;
+    case 'B':
+      flags |= 4;
       break;
     case 'b':
       r = 2;
@@ -89,44 +103,46 @@ static void va_xprintf(const char *fmt, va_list args) {
     }
 
     j = (unsigned int)va_arg(args, unsigned int);
-    switch(r) {
-    case 2:
-      out_string("0b");
-      break;
-    case 8:
-      out_char('o');
-      break;
-    case 16:
-      if(!(flags & 4))
-	out_string("0x");
-      break;
+    
+    if(!(flags & 4)) {
+      switch(r) {
+      case 2:
+	out_string("0b");
+	break;
+      case 8:
+	out_char('o');
+	break;
+      case 16:
+	if(!(flags & 4))
+	  out_string("0x");
+	break;
+      }
     }
-
+    
     i = 0;
     
-    if((flags&8) && j > 0) {
-      for(int k=0; k<16; k++) buff[k]=0;
-      
-      if( (flags&1) && (j & 0x8000000) ) { flags |= 2; j = 0 - j; }
-      
-      do {
-	int w = j%r;
-	j /=r;
-	buff[i++] = digits[w];
-      } while(j && i < sizeof(buff));
-      
-      if(flags&2) out_char('-');
-      
-      j = i;
+    for(int k = 0; k < (MAX_FORMAT_WIDTH+1); k++) buff[k]=0;
     
-      if((flags&8) && (i < width)) {
-	while(i++ < width) out_char('0');
-      }
+    if(flags&8)
+      for(int fill = 0; fill < width; fill++) buff[fill] = '0';
+      
+    if( (flags&1) && (j & 0x8000000) ) { flags |= 2; j = 0 - j; }
+      
+    do {
+      int w = j%r;
+      j /=r;
+      buff[i++] = digits[w];
+    } while(j && i < sizeof(buff));
+      
+    if(flags&2) out_char('-');
+      
+    j = i;
     
-      while(j >= 0) out_char(buff[j--]);
-    } else {
-      for(i = 0; i < width; i++) out_char('0');
+    if((flags&8) && (i < width)) {
+      while(i++ < width) out_char('0');
     }
+    
+    while(j >= 0) out_char(buff[j--]);
   }
 }
 
