@@ -36,6 +36,11 @@ System varargs - the classic C varargs setup - are available (sans va_copy) in `
 
 Hardware register constants and access information currently in ``system_defs.h`` - this will change.
 
+## Adding Tests
+For a test that is possible with just C, all you need to do is write the test, add a declaration to ``current-tests.h`` and call the test from ``vc4-runner.c``'s ``tests()`` function. If you added the test as a new source file, you'll need to add that to the Makefile as well. Any extra peripheral registers should be added to ``system_defs.h``.
+
+If you have a test that needs assembly, then add it to ``vc4-tests.s`` and follow the shown calling conventions... Or try adding it as an ``__asm__`` block, possibly ``__volatile__``.
+
 ## Footnotes
 ¹ The standard comparison operation - that is, ``cmp`` in assembly language - sets the zero flag in the status register to signal "equals". The available documentation for ``btest`` states that the zero flag will be set when the bit is not set. Two of these tests actually check that - the third checks to see if the ``Negative`` flag is set if you test the ``sign`` bit of a negative number. While this information is no longer specifically needed, the tests remain as something of a historical relic.
 ² None of the available documentation covers what the default values of these registers are, unlike almost all the other registers. This is needed for accurate emulation. The contents of the OTP memory itself is also needed for accurate emulation. None of the registers that are masked-out by the ``vgencmd otp_dump`` are recorded anywhere, as the information is masked-out for reason, possibly Broadcom mandated.
