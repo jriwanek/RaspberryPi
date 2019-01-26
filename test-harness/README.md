@@ -43,8 +43,13 @@ If you have a test that needs assembly, then add it to ``vc4-tests.s`` and follo
 
 ## Footnotes
 ¹ The standard comparison operation - that is, ``cmp`` in assembly language - sets the zero flag in the status register to signal "equals". The available documentation for ``btest`` states that the zero flag will be set when the bit is not set. Two of these tests actually check that - the third checks to see if the ``Negative`` flag is set if you test the ``sign`` bit of a negative number. While this information is no longer specifically needed, the tests remain as something of a historical relic.
+
 ² None of the available documentation covers what the default values of these registers are, unlike almost all the other registers. This is needed for accurate emulation. The contents of the OTP memory itself is also needed for accurate emulation. None of the registers that are masked-out by the ``vgencmd otp_dump`` are recorded anywhere, as the information is masked-out for reason, possibly Broadcom mandated.
+
 ³ The bootrom is one of the key parts of the Raspberry Pi starting and is completely undocumented, to my knowledge. It may have some effect on the runtime environment - or even be referenced - from the code in ``bootcode.bin``. For this reason a dump is needed - one that can be converted back to the binary form - for accurate emulation.
+
 ⁴ Until the PLL is configured the system runs on the clock provided by a 19.2MHz crystal on the board.
+
 ⁵ As the code runs through the GNU build system, the "backslash escapes" are actually part of that system - even the GNU Assembler has automatic conversion of them.
+
 ⁶ These are somewhat compatible with classic printf formatters, but the provided xprintf is not printf and you should not expect them to always work the same or have the same features. See the "Test Library" section for details.
