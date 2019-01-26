@@ -59,7 +59,7 @@ static void va_xprintf(const char *fmt, va_list args) {
       p = va_arg(args, char *);
       if(flags&8) {
 	for(j = 0; p[j]; j++) ;
-	while(j++ < w) out_char(' ');
+	while(j++ < width) out_char(' ');
       }
       out_string(p);
       continue;
