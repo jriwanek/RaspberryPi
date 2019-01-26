@@ -12,8 +12,6 @@
 #define conv_octdigit(x) (is_octal_digit((x))?(x) - '0':(x))
 #define conv_hexdigit(x) (is_hexdigit((x))?is_digit((x))?(x) - 0:to_lower((x)) - 'W':0)
 
-#define MAX_FORMAT_WIDTH 32
-
 void out_char(const unsigned char ch) {
   if(ch == 0) return;
   
@@ -35,7 +33,7 @@ void xprintf(const char *, ...);
 
 static void va_xprintf(const char *fmt, va_list args) {
   unsigned char c;
-  char *p, buff[MAX_FORMAT_WIDTH+1];
+  char *p, buff[32];
   int j, r, i, flags, width;
   
   for(;;) {
@@ -68,17 +66,10 @@ static void va_xprintf(const char *fmt, va_list args) {
     case 'c':
       out_char((const char)va_arg(args,int));
       continue;
-    case 'D':
-      flags |= 4;
     case 'd':
       flags |= 1;
     case 'u':
     case 'i':
-      r = 10;
-      break;
-    case 'U':
-    case 'I':
-      flags |= 4;
       r = 10;
       break;
     case 'X':
@@ -121,11 +112,8 @@ static void va_xprintf(const char *fmt, va_list args) {
     
     i = 0;
     
-    for(int k = 0; k < (MAX_FORMAT_WIDTH+1); k++) buff[k]=0;
+    for(int k = 0; k < 32; k++) buff[k]=0;
     
-    if(flags&8)
-      for(int fill = 0; fill < width; fill++) buff[fill] = '0';
-      
     if( (flags&1) && (j & 0x8000000) ) { flags |= 2; j = 0 - j; }
       
     do {
@@ -138,7 +126,8 @@ static void va_xprintf(const char *fmt, va_list args) {
       
     j = i;
     
-    if((flags&8) && (i < width)) {
+    if(flags & 8) {
+      i --;
       while(i++ < width) out_char('0');
     }
     
