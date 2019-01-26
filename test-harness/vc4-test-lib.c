@@ -51,17 +51,31 @@ void dump_otp_data() {
     r = OTP_CTRL_LO_REG;
     while((OTP_STATUS_REG &1)==0) ;
     reg = OTP_DATA_REG;
-    xprintf("%u: %x\n", i, reg);
+    xprintf("%08u: %08x\n", i, reg);
   }
   sleep_otp();
 }
 
 void dump_otp_regs() {
   xprintf("OTP REGISTER DUMP:\n");
-  xprintf("\tBOOTMODE: %x\n\tCONFIG: %x\n", OTP_BOOTMODE_REG, OTP_CONFIG_REG);
-  xprintf("\tCTRL_LO: %x\n\tCNTRL_HI: %x\n", OTP_CTRL_LO_REG, OTP_CTRL_HI_REG);
-  xprintf("\tBITSEL: %x\n\tDATA: %x\n", OTP_BITSEL_REG, OTP_DATA_REG);
-  xprintf("\tADDR: %x\n\tWRITE_DATA_READ: %x\n", OTP_ADDR_REG, OTP_WRITE_DATA_READ_REG);
-  xprintf("\tINIT_STATUS: %x\n", OTP_INIT_STATUS_REG);
+  xprintf("\tBOOTMODE: %08x\n\tCONFIG: %08x\n", OTP_BOOTMODE_REG, OTP_CONFIG_REG);
+  xprintf("\tCTRL_LO: %08x\n\tCNTRL_HI: %08x\n", OTP_CTRL_LO_REG, OTP_CTRL_HI_REG);
+  xprintf("\tBITSEL: %08x\n\tDATA: %08x\n", OTP_BITSEL_REG, OTP_DATA_REG);
+  xprintf("\tADDR: %08x\n\tWRITE_DATA_READ: %08x\n", OTP_ADDR_REG, OTP_WRITE_DATA_READ_REG);
+  xprintf("\tINIT_STATUS: %08x\n", OTP_INIT_STATUS_REG);
 }
 
+#define MEM_AT_OFFSET(addr, base, offset) (*(volatile unsigned int*)((addr)+(base)+(offset)))
+void dump_bootrom() {
+  unsigned int base = 0x60000000;
+  unsigned int max = 0x8000;
+  xprintf("\nBOOTROM DUMP: (%08x to %08x)\n", base, (base+max));
+  for(int i = 0; i < max; i += 16) {
+    int a0 = MEM_AT_OFFSET(base, i, 0);
+    int a4 = MEM_AT_OFFSET(base, i, 4);
+    int a8 = MEM_AT_OFFSET(base, i, 8);
+    int ac =  MEM_AT_OFFSET(base, i, 0xc);
+
+    xprintf("%08x: %08X %08X %08X %08X\n", base + i, a0, a4, a8, ac);
+  }
+}

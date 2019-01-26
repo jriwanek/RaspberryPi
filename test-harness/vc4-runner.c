@@ -26,5 +26,6 @@ void tests() {
   test_btest();
   dump_otp_regs();
   dump_otp_data();
+  dump_bootrom();
 }
 
