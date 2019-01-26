@@ -14,7 +14,9 @@
 
 void out_char(const unsigned char ch) {
   if(ch == 0) return;
+  
   if(ch == 0x0A) out_char(0x0D);
+  
   // wait for the buffer to have space
   while(!(AUX_MU_LSR_REG & 0x20)) ;
     
@@ -27,15 +29,17 @@ void out_string(const char *str) {
   while(*str)
     out_char(*str++);
 }
+void xprintf(const char *, ...);
 
 static void va_xprintf(const char *fmt, va_list args) {
   unsigned char c;
   char *p, buff[16];
-  int j, r, i, s;
+  int j, r, i, flags, width;
   
   for(;;) {
     c=*fmt++;
-    s = 0;
+    flags = 0;
+    width = 0;
     
     if(!c) break;
     
@@ -44,6 +48,16 @@ static void va_xprintf(const char *fmt, va_list args) {
     }
 
     c = *fmt++;
+    if(c == '0') {
+      flags |= 8;
+      c = *fmt++;
+      while((c - '0') <= 9 && (c - '0') > 0) {
+	width *= 10;
+	width += (c - '0');
+	c = *fmt++;
+      }
+    }
+    
     switch(c) {
     case 's':
       p = va_arg(args, char *);
@@ -53,11 +67,13 @@ static void va_xprintf(const char *fmt, va_list args) {
       out_char((const char)va_arg(args,int));
       continue;
     case 'd':
-      s = 1;
+      flags |= 1;
     case 'u':
     case 'i':
       r = 10;
       break;
+    case 'X':
+      flags |= 4;
     case 'x':
       r = 16;
       break;
@@ -73,7 +89,6 @@ static void va_xprintf(const char *fmt, va_list args) {
     }
 
     j = (unsigned int)va_arg(args, unsigned int);
-
     switch(r) {
     case 2:
       out_string("0b");
@@ -82,21 +97,36 @@ static void va_xprintf(const char *fmt, va_list args) {
       out_char('o');
       break;
     case 16:
-      out_string("0x");
+      if(!(flags & 4))
+	out_string("0x");
       break;
     }
 
     i = 0;
-    for(int k=0;k<16;k++) buff[k]=0;
-    if(s && j & 0x8000000) { s = 2; j = 0 - j; }
-    do {
-      int w = j%r;
-      j /=r;
-      buff[i++] = digits[w];
-    } while(j>0);
-    if(s==2) buff[i++] = '-';
-    j = i;
-    while(j >= 0) out_char(buff[j--]);
+    
+    if((flags&8) && j > 0) {
+      for(int k=0; k<16; k++) buff[k]=0;
+      
+      if( (flags&1) && (j & 0x8000000) ) { flags |= 2; j = 0 - j; }
+      
+      do {
+	int w = j%r;
+	j /=r;
+	buff[i++] = digits[w];
+      } while(j && i < sizeof(buff));
+      
+      if(flags&2) out_char('-');
+      
+      j = i;
+    
+      if((flags&8) && (i < width)) {
+	while(i++ < width) out_char('0');
+      }
+    
+      while(j >= 0) out_char(buff[j--]);
+    } else {
+      for(i = 0; i < width; i++) out_char('0');
+    }
   }
 }
 
