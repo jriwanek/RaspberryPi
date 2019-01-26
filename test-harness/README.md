@@ -19,15 +19,12 @@ The code runs in supervisor mode on the bare metal of the VC4, with the global p
 ## Test "Library"
 As mentioned in the "Test Environment" section there is a printf-like function provided, it has the following format/transposition options:
 * ``c`` single character
-* ``s`` string - can be space-padded (right aligned) by using a form similar to the classic C style - ie: ``%032s`` will left-pad the string with spaces for a field width of at least 32 characters - larger than that and the string will overflow the field.
-* ``u`` or ``i`` unsigned integer - can be zero-padded following the same format as string output with the same caveat
+* ``s`` string - can be space-padded (right aligned) by using a form similar to the classic C style - ie: ``%32s`` will left-pad the string with spaces for a field width of at least 32 characters - larger than that and the string will overflow the field.
+* ``u`` or ``i`` unsigned integer - can be zero-padded following the same format as string output with the same caveat -- starting the field width with a ``0`` will pad with zeros instead of spaces.
 * ``d`` signed integer (same as ``u`` or ``i``)
-* ``x`` unsigned integer, as hexidecimal, leading ``0x``, zero-padding with all caveats
-* ``X`` same as ``x`` but lacking the leading ``0x```, zero-padding with all caveats
-* ``o`` like ``x`` but in octal, leading ``o```, zero-padding with all caveats
-* ``O`` this is ``o`` but lacking the leading ``o```, zero-padding with all caveats
-* ``b`` output as binary, leading ``0b```, zero-padding with all caveats
-* ``B`` same as ``b`` but no leading ``0b```, zero-padding with all caveats
+* ``x`` unsigned integer, as hexidecimal, zero-padding with all caveats
+* ``o`` like ``x`` but in octal, zero-padding with all caveats
+* ``b`` output as binary, zero-padding with all caveats
 * ``%`` output a literal ``%``
 
 Definition/description to be found in ``vc4-stdlib.h``
