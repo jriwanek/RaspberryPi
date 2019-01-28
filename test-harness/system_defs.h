@@ -29,7 +29,10 @@
 #define OTP_ADDR_REG HW_REGISTER_RW(0x7e20f01c)
 #define OTP_WRITE_DATA_READ_REG HW_REGISTER_RW(0x7e20f020)
 #define OTP_INIT_STATUS_REG HW_REGISTER_RW(0x7e20f024)
-  
+
+// PLL/A2W stuffs
+#include "a2w_pll.h"
+
 #define GP_FSEL14_CLEAR 0xffff8fffU
 #define GP_FSEL15_CLEAR 0xfffc7fffU
 #define GP_PIN14 12
