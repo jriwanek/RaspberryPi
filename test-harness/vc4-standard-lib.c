@@ -12,6 +12,8 @@
 #define conv_octdigit(x) (is_octal_digit((x))?(x) - '0':(x))
 #define conv_hexdigit(x) (is_hexdigit((x))?is_digit((x))?(x) - 0:to_lower((x)) - 'W':0)
 
+typedef unsigned int size_t;
+
 void out_char(const unsigned char ch) {  
   if(ch == 0x0A) out_char(0x0D);
   
@@ -108,4 +110,13 @@ void xprintf(const char *fmt, ...) {
   va_start(args, fmt);
   va_xprintf(fmt, args);
   va_end(args);
+}
+
+void *memcpy(void *dest, const void *src, size_t n) {
+  char *d = dest;
+  const char *s = src;
+  
+  for(int x = 0; x < n; x++) d[x] = s[x];
+
+  return d;
 }
