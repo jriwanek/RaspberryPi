@@ -1,7 +1,7 @@
 	.section .text.start
 	.global _start
 _start:
-	mov gp, 0x8000c000
-	mov sp, 0x8000d5ac
+	mov gp, data_seg
+	mov sp, stack_seg
 	b main
 	
