@@ -22,11 +22,11 @@ void main() {
 
 
 void tests() {
-  /* test_version(); */
-  /* test_btest(); */
-  /* dump_otp_regs(); */
-  /* dump_otp_data(); */
-  /* dump_bootrom(); */
+  test_version();
+  test_btest();
+  dump_otp_regs();
+  dump_otp_data();
+  dump_bootrom();
   dump_pll_regs();
 }
 

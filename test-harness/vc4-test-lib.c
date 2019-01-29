@@ -104,39 +104,75 @@ const char *a2w_pll_reg_names_94[] = {
   "A2W_HDMI_CTL0R", "A2W_HDMI_CTL1R", "A2W_HDMI_CTL2R", "A2W_HDMI_CTL3R", "A2W_XOSC0R",     "A2W_XOSC1R"
 };
 
-#define REG_OFFSET(base, regnum, size) (*(volatile unsigned int *)(base+(regnum*size)))
-#define PLL_EX_REG(base, pll, reg) (*(volatile unsigned int *)(base+((reg*0x100)+(pll*0x20))))
+struct pll_reg {
+  const char *name;
+  unsigned int addr;
+  unsigned int mask;
+};
+
+struct pll_reg pll_registers[] ={
+    { "A2W_PLLA_DIG0",   0x7e102000, 0x00ffffff }, { "A2W_PLLA_DIG1",   0x7e102004, 0x00ffffff }, { "A2W_PLLA_DIG2",   0x7e102008, 0x00ffffff },
+    { "A2W_PLLA_DIG3",   0x7e10200c, 0x00ffffff }, { "A2W_PLLA_ANA0",   0x7e102010, 0x00ffffff }, { "A2W_PLLA_ANA1",   0x7e102014, 0x00ffffff }, 
+    { "A2W_PLLA_ANA2",   0x7e102018, 0x00ffffff }, { "A2W_PLLA_ANA3",   0x7e10201c, 0x00ffffff }, { "A2W_PLLC_DIG0",   0x7e102020, 0x00ffffff }, 
+    { "A2W_PLLC_DIG1",   0x7e102024, 0x00ffffff }, { "A2W_PLLC_DIG2",   0x7e102028, 0x00ffffff }, { "A2W_PLLC_DIG3",   0x7e10202c, 0x00ffffff },
+    { "A2W_PLLC_ANA0",   0x7e102030, 0x00ffffff }, { "A2W_PLLC_ANA1",   0x7e102034, 0x00ffffff }, { "A2W_PLLC_ANA2",   0x7e102038, 0x00ffffff },
+    { "A2W_PLLC_ANA3",   0x7e10203c, 0x00ffffff }, { "A2W_PLLD_DIG0",   0x7e102040, 0x00ffffff }, { "A2W_PLLD_DIG1",   0x7e102044, 0x00ffffff },
+    { "A2W_PLLD_DIG2",   0x7e102048, 0x00ffffff }, { "A2W_PLLD_DIG3",   0x7e10204c, 0x00ffffff }, { "A2W_PLLD_ANA0",   0x7e102050, 0x00ffffff },
+    { "A2W_PLLD_ANA1",   0x7e102054, 0x00ffffff }, { "A2W_PLLD_ANA2",   0x7e102058, 0x00ffffff }, { "A2W_PLLD_ANA3",   0x7e10205c, 0x00ffffff },
+    { "A2W_PLLH_DIG0",   0x7e102060, 0x00ffffff }, { "A2W_PLLH_DIG1",   0x7e102064, 0x00ffffff }, { "A2W_PLLH_DIG2",   0x7e102068, 0x00ffffff },
+    { "A2W_PLLH_DIG3",   0x7e10206c, 0x00ffffff }, { "A2W_PLLH_ANA0",   0x7e102070, 0x00ffffff }, { "A2W_PLLH_ANA1",   0x7e102074, 0x00ffffff },
+    { "A2W_PLLH_ANA2",   0x7e102078, 0x00ffffff }, { "A2W_PLLH_ANA3",   0x7e10207c, 0x00ffffff }, { "A2W_HDMI_CTL0",   0x7e102080, 0x00ffffff },
+    { "A2W_HDMI_CTL1",   0x7e102084, 0x00ffffff }, { "A2W_HDMI_CTL2",   0x7e102088, 0x00ffffff }, { "A2W_HDMI_CTL3",   0x7e10208c, 0x00ffffff },
+    { "A2W_XOSC0",       0x7e102090, 0x00ffffff }, { "A2W_XOSC1",       0x7e102094, 0x00ffffff }, { "A2W_SMPS_CTLA0",  0x7e1020a0, 0x00ffffff },
+    { "A2W_SMPS_CTLA1",  0x7e1020a4, 0x00ffffff }, { "A2W_SMPS_CTLA2",  0x7e1020a8, 0x00ffffff }, { "A2W_SMPS_CTLB0",  0x7e1020b0, 0x00ffffff },
+    { "A2W_SMPS_CTLB1",  0x7e1020b4, 0x00ffffff }, { "A2W_SMPS_CTLB2",  0x7e1020b8, 0x00ffffff }, { "A2W_SMPS_CTLC0",  0x7e1020c0, 0x00ffffff }, 
+    { "A2W_SMPS_CTLC1",  0x7e1020c4, 0x00ffffff }, { "A2W_SMPS_CTLC2",  0x7e1020c8, 0x00ffffff }, { "A2W_SMPS_CTLC3",  0x7e1020cc, 0x00ffffff },
+    { "A2W_SMPS_LDO0",   0x7e1020d0, 0x00ffffff }, { "A2W_SMPS_LDO1",   0x7e1020d4, 0x00ffffff }, { "A2W_PLLA_CTRL",   0x7e102100, 0x000373ff },
+    { "A2W_PLLA_FRAC",   0x7e102200, 0x000fffff }, { "A2W_PLLA_DSI0",   0x7e102300, 0x000003ff }, { "A2W_PLLA_CORE",   0x7e102400, 0x000003ff },
+    { "A2W_PLLA_PER",    0x7e102500, 0x000003ff }, { "A2W_PLLA_CCP2",   0x7e102600, 0x000003ff }, { "A2W_PLLC_CTRL",   0x7e102120, 0x000373ff },
+    { "A2W_PLLC_FRAC",   0x7e102220, 0x000fffff }, { "A2W_PLLC_CORE2",  0x7e102320, 0x000003ff }, { "A2W_PLLC_CORE1",  0x7e102420, 0x000003ff },
+    { "A2W_PLLC_PER",    0x7e102520, 0x000003ff }, { "A2W_PLLC_CORE0",  0x7e102620, 0x000003ff }, { "A2W_PLLD_CTRL",   0x7e102140, 0x000373ff },
+    { "A2W_PLLD_FRAC",   0x7e102240, 0x000fffff }, { "A2W_PLLD_DSI0",   0x7e102340, 0x000003ff }, { "A2W_PLLD_CORE",   0x7e102440, 0x000003ff },
+    { "A2W_PLLD_PER",    0x7e102540, 0x000003ff }, { "A2W_PLLD_DSI1",   0x7e102640, 0x000003ff }, { "A2W_PLLH_CTRL",   0x7e102160, 0x000370ff },
+    { "A2W_PLLH_FRAC",   0x7e102260, 0x000fffff }, { "A2W_PLLH_AUX",    0x7e102360, 0x000003ff }, { "A2W_PLLH_RCAL",   0x7e102460, 0x000003ff },
+    { "A2W_PLLH_PIX",    0x7e102560, 0x000003ff }, { "A2W_PLLH_STS",    0x7e102660, 0xffffffff }, { "A2W_XOSC_CTRL",   0x7e102190, 0x0000037f },
+    { "A2W_PLLA_DIG0R",  0x7e102800, 0x00ffffff }, { "A2W_PLLA_DIG1R",  0x7e102804, 0x00ffffff }, { "A2W_PLLA_DIG2R",  0x7e102808, 0x00ffffff },
+    { "A2W_PLLA_DIG3R",  0x7e10280c, 0x00ffffff }, { "A2W_PLLA_ANA0R",  0x7e102810, 0x00ffffff }, { "A2W_PLLA_ANA1R",  0x7e102814, 0x00ffffff },
+    { "A2W_PLLA_ANA2R",  0x7e102818, 0x00ffffff }, { "A2W_PLLA_ANA3R",  0x7e10281c, 0x00ffffff }, { "A2W_PLLC_DIG0R",  0x7e102820, 0x00ffffff },
+    { "A2W_PLLC_DIG1R",  0x7e102824, 0x00ffffff }, { "A2W_PLLC_DIG2R",  0x7e102828, 0x00ffffff }, { "A2W_PLLC_DIG3R",  0x7e10282c, 0x00ffffff },
+    { "A2W_PLLC_ANA0R",  0x7e102830, 0x00ffffff }, { "A2W_PLLC_ANA1R",  0x7e102834, 0x00ffffff }, { "A2W_PLLC_ANA2R",  0x7e102838, 0x00ffffff },
+    { "A2W_PLLC_ANA3R",  0x7e10283c, 0x00ffffff }, { "A2W_PLLD_DIG0R",  0x7e102840, 0x00ffffff }, { "A2W_PLLD_DIG1R",  0x7e102844, 0x00ffffff },
+    { "A2W_PLLD_DIG2R",  0x7e102848, 0x00ffffff }, { "A2W_PLLD_DIG3R",  0x7e10284c, 0x00ffffff }, { "A2W_PLLD_ANA0R",  0x7e102850, 0x00ffffff },
+    { "A2W_PLLD_ANA1R",  0x7e102854, 0x00ffffff }, { "A2W_PLLD_ANA2R",  0x7e102858, 0x00ffffff }, { "A2W_PLLD_ANA3R",  0x7e10285c, 0x00ffffff },
+    { "A2W_PLLH_DIG0R",  0x7e102860, 0x00ffffff }, { "A2W_PLLH_DIG1R",  0x7e102864, 0x00ffffff }, { "A2W_PLLH_DIG2R",  0x7e102868, 0x00ffffff },
+    { "A2W_PLLH_DIG3R",  0x7e10286c, 0x00ffffff }, { "A2W_PLLH_ANA0R",  0x7e102870, 0x00ffffff }, { "A2W_PLLH_ANA1R",  0x7e102874, 0x00ffffff },
+    { "A2W_PLLH_ANA2R",  0x7e102878, 0x00ffffff }, { "A2W_PLLH_ANA3R",  0x7e10287c, 0x00ffffff }, { "A2W_HDMI_CTL0R",  0x7e102880, 0x00ffffff },
+    { "A2W_HDMI_CTL1R",  0x7e102884, 0x00ffffff }, { "A2W_HDMI_CTL2R",  0x7e102888, 0x00ffffff }, { "A2W_HDMI_CTL3R",  0x7e10288c, 0x00ffffff },
+    { "A2W_XOSC0R",      0x7e102890, 0x00ffffff }, { "A2W_XOSC1R",      0x7e102894, 0x00ffffff }, { "A2W_SMPS_CTLA0R", 0x7e1028a0, 0x00ffffff },
+    { "A2W_SMPS_CTLA1R", 0x7e1028a4, 0x00ffffff }, { "A2W_SMPS_CTLA2R", 0x7e1028a8, 0x00ffffff }, { "A2W_SMPS_CTLB0R", 0x7e1028b0, 0x00ffffff },
+    { "A2W_SMPS_CTLB1R", 0x7e1028b4, 0x00ffffff }, { "A2W_SMPS_CTLB2R", 0x7e1028b8, 0x00ffffff }, { "A2W_SMPS_CTLC0R", 0x7e1028c0, 0x00ffffff },
+    { "A2W_SMPS_CTLC1R", 0x7e1028c4, 0x00ffffff }, { "A2W_SMPS_CTLC2R", 0x7e1028c8, 0x00ffffff }, { "A2W_SMPS_CTLC3R", 0x7e1028cc, 0x00ffffff },
+    { "A2W_SMPS_LDO0R",  0x7e1028d0, 0x00ffffff }, { "A2W_SMPS_LDO1R",  0x7e1028d4, 0x00ffffff }, { "A2W_PLLA_CTRLR",  0x7e102900, 0x000373ff },
+    { "A2W_PLLA_FRACR",  0x7e102a00, 0x000fffff }, { "A2W_PLLA_DSI0R",  0x7e102b00, 0x000003ff }, { "A2W_PLLA_CORER",  0x7e102c00, 0x000003ff },
+    { "A2W_PLLA_PERR",   0x7e102d00, 0x000003ff }, { "A2W_PLLA_CCP2R",  0x7e102e00, 0x000003ff }, { "A2W_PLLA_MULTI",  0x7e102f00, 0xffffffff },
+    { "A2W_PLLC_CTRLR",  0x7e102920, 0x000373ff }, { "A2W_PLLC_FRACR",  0x7e102a20, 0x000fffff }, { "A2W_PLLC_CORE2R", 0x7e102b20, 0x000003ff },
+    { "A2W_PLLC_CORE1R", 0x7e102c20, 0x000003ff }, { "A2W_PLLC_PERR",   0x7e102d20, 0x000003ff }, { "A2W_PLLC_CORE0R", 0x7e102e20, 0x000003ff },
+    { "A2W_PLLC_MULTI",  0x7e102f20, 0xffffffff }, { "A2W_PLLD_CTRLR",  0x7e102940, 0x000373ff }, { "A2W_PLLD_FRACR",  0x7e102a40, 0x000fffff },
+    { "A2W_PLLD_DSI0R",  0x7e102b40, 0x000003ff }, { "A2W_PLLD_CORER",  0x7e102c40, 0x000003ff }, { "A2W_PLLD_PERR",   0x7e102d40, 0x000003ff },
+    { "A2W_PLLD_DSI1R",  0x7e102e40, 0x000003ff }, { "A2W_PLLD_MULTI",  0x7e102f40, 0xffffffff }, { "A2W_PLLH_CTRLR",  0x7e102960, 0x000370ff },
+    { "A2W_PLLH_FRACR",  0x7e102a60, 0x000fffff }, { "A2W_PLLH_AUXR",   0x7e102b60, 0x000003ff }, { "A2W_PLLH_RCALR",  0x7e102c60, 0x000003ff },
+    { "A2W_PLLH_PIXR",   0x7e102d60, 0x000003ff }, { "A2W_PLLH_STSR",   0x7e102e60, 0x000003ff }, { "A2W_XOSC_CTRLR",  0x7e102990, 0x0000037f },
+    { "A2W_PLLH_MULTI",  0x7e102f60, 0xffffffff }
+};
+
+#define PLL_REG_OFFSET(addr) (*(volatile unsigned int *)(addr))
 
 void dump_pll_regs() {
   xprintf("\nA2W PLL DEFAULT REGISTER VALUES DUMP:\n");
-  for(unsigned int x = 0; x < 50; x++)
-    xprintf("\t%016s: 0x%08x\n", a2w_pll_reg_names_d4[x], REG_OFFSET(A2W_BASE, x, 4) & 0x00ffffff);
-
-  xprintf("\n");
-
-  const char *pll_regs_ex[][6] = {
-      { "CTRL", "FRAC", "DSI0", "CORE", "PER", "CCP2" },
-      { "CTRL", "FRAC", "CORE2", "CORE1", "PER", "CORE0" },
-      { "CTRL", "FRAC", "DSI0", "CORE", "PER", "DSI1"},
-      { "CTRL", "FRAC", "AUX", "RCAL", "PIX", "STS" }
-  };
-
-  for(int pll_reg = 0; pll_reg < 4; pll_reg++) {
-    const char which_pll[] = { 'A', 'C', 'D', 'H' };
-    const unsigned int mask[] = { 0x000373ffU, 0x000fffffU, 0x000003ffU, 0x000003ffU, 0x000003ffU, 0x000003ffU };
-    for(int w_reg = 0; w_reg < 6; w_reg++) {
-      xprintf("\tA2W_PLL%c_%s:\t0x%08x\n",  which_pll[pll_reg], pll_regs_ex[pll_reg][w_reg], PLL_EX_REG(0x7e102100, pll_reg, w_reg) & mask[w_reg]);
-    }
+  for(unsigned int x = 0; x < 150; x++) {
+    struct pll_reg reg = pll_registers[x];
+    unsigned int raw_reg_val = PLL_REG_OFFSET(reg.addr);
+    unsigned int reg_val_masked = raw_reg_val & reg.mask;
+    xprintf("\t%016s: 0x%08x\n", reg.name, reg_val_masked);
   }
-  
-  xprintf("\n");
-  xprintf("\tA2W_XOSC_CTRL:\t0x%08x\n", REG_OFFSET(0x7e102190, 0, 0));
-  xprintf("\n");
-
-  
-  for(unsigned int x = 0; x < 38; x++)
-    xprintf("\t%016sR: 0x%08x\n", a2w_pll_reg_names_94[x], REG_OFFSET(0x7e102800, x, 4) & 0x00ffffff);
-
-  xprintf("\n");
-  
 }
