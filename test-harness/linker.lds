@@ -14,9 +14,22 @@ SECTIONS {
      *(.text.xprintf)
      *(.text.va_xprintf)
    }
-   . = 0x8000c000;
+
+   . = ALIGN(0x1000);
+   data_seg = .;
    .data : {
-     *(.bss)
-     *(.rodata)
+     *(.data)
+     *(.data.*)
    }
+   .rodata : {
+     *(.rodata)
+     *(.rodata.*)
+   }
+
+   .bss : {
+     *(.bss)
+     *(.bss.*)
+   }
+   
+   stack_seg = ALIGN(0x10000);
 }
