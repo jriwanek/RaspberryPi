@@ -7,9 +7,12 @@
 
 extern unsigned int _miniuart_settings;
 
-void _exit(int status) {
+__attribute__((noreturn)) void
+_exit (int status)
+{
   printf("exited: %d\n", status);
-  for(;;) __asm__ __volatile__("nop\n");
+  register int r0 __asm__("r0") = status;
+  __asm__ __volatile__ ("sleep" : : "r" (r0));
 }
 
 void setup_uart(unsigned int baud_reg) {
