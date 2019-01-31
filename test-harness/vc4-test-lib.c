@@ -1,19 +1,23 @@
-#include "system_defs.h"
+#include <stdarg.h>
+#include <stdio.h>
+#include <stdint.h>
+#include <test-helpers.h>
+#include <hardware.h>
+#include <bcm2708_chip/otp.h>
 #include "test-support.h"
-#include "vc4-stdlib.h"
 
 void test_version() {
-  xprintf(">> test of \"version r0\" (or, alternatively, \"mov r0, cpuid\") operation\n");
+  printf(">> test of \"version r0\" (or, alternatively, \"mov r0, cpuid\") operation\r\n");
   unsigned int version = get_version();
-  xprintf("version:                 0x%08x\n", version);
+  printf("version:                 0x%08x\r\n", version);
 }
 
 void test_btest() {
-  xprintf(">> test of btest operation and results in various spots\n");
+  printf(">> test of btest operation and results in various spots\r\n");
   volatile unsigned int no_match = btest_run(8,2), match = btest_run(8,3), ztest = btest_run(-127,31);
-  xprintf("btest non-match sr:      0x%08x\n"
-	  "btest match sr:          0x%08x\n"
-	  "btest match sign-bit sr: 0x%08x\n", no_match, match, ztest);
+  printf("btest non-match sr:      0x%08x\r\n"
+	  "btest match sr:          0x%08x\r\n"
+	  "btest match sign-bit sr: 0x%08x\r\n", no_match, match, ztest);
 }
 
 void otp_wait(unsigned int cyc) {
@@ -40,7 +44,7 @@ void sleep_otp() {
 
 void dump_otp_data() {
   wake_otp();
-  xprintf("OTP DATA DUMP:\n");
+  printf("OTP DATA DUMP:\r\n");
   for(int i = 0; i < 0x80; i++) {
     int reg;
     OTP_ADDR_REG = i;
@@ -53,46 +57,52 @@ void dump_otp_data() {
     r = OTP_CTRL_LO_REG;
     while((OTP_STATUS_REG &1)==0) ;
     reg = OTP_DATA_REG;
-    xprintf("%3u: 0x%08x\n", i, reg);
+    printf("%3u: 0x%08x\r\n", i, reg);
   }
   sleep_otp();
 }
 
+#define DEV_REG_OFFSET(addr) (*(volatile unsigned int *)(addr))
+
+struct data_reg {
+  const char *name;
+  unsigned int addr;
+  unsigned int mask;
+};
+
+struct data_reg otp_registers[] = {
+  { "OTP_BOOTMODE_REG", 0x7e20f000, 0xffffffff }, { "OTP_CONFIG_REG",          0x7e20f004, 0x00000007 }, { "OTP_CTRL_LO_REG",     0x7e20f008, 0xffffffff },
+  { "OTP_CTRL_HI_REG",  0x7e20f00c, 0x0000ffff }, { "OTP_BITSEL_REG",          0x7e20f010, 0xffffffff }, { "OTP_DATA_REG",        0x7e20f014, 0x0000001f },
+  { "OTP_ADDR_REG",     0x7e20f018, 0x0000001f }, { "OTP_WRITE_DATA_READ_REG", 0x7e20f01c, 0xffffffff }, { "OTP_INIT_STATUS_REG", 0x7e20f020, 0xffffffff }
+};
+
 void dump_otp_regs() {
-  xprintf("OTP REGISTER DUMP:\n");
-  xprintf("\tBOOTMODE:        0x%08x\n"
-	  "\tCONFIG:          0x%08x\n", OTP_BOOTMODE_REG, OTP_CONFIG_REG);
-  xprintf("\tCTRL_LO:         0x%08x\n"
-	  "\tCNTRL_HI:        0x%08x\n", OTP_CTRL_LO_REG, OTP_CTRL_HI_REG);
-  xprintf("\tBITSEL:          0x%08x\n"
-	  "\tDATA:            0x%08x\n", OTP_BITSEL_REG, OTP_DATA_REG);
-  xprintf("\tADDR:            0x%08x\n"
-	  "\tWRITE_DATA_READ: 0x%08x\n", OTP_ADDR_REG, OTP_WRITE_DATA_READ_REG);
-  xprintf("\tINIT_STATUS:     0x%08x\n", OTP_INIT_STATUS_REG);
+  printf("OTP REGISTER DUMP:\r\n");
+  for( int i = 0; i < 9; i++ ) {
+    struct data_reg reg = otp_registers[i];
+    unsigned int raw_val = DEV_REG_OFFSET(reg.addr);
+    unsigned int mask = reg.mask;
+    unsigned int actual = raw_val & mask;
+    printf("\t%023s:\t0x%08x\r\n", reg.name, actual);
+  }
 }
 
 #define MEM_AT_OFFSET(addr, base, offset) (*(volatile unsigned int*)((addr)+(base)+(offset)))
 void dump_bootrom() {
   unsigned int base = 0x60000000;
   unsigned int max = 0x8000;
-  xprintf("\nBOOTROM DUMP: (%08x to %08x)\n", base, (base+max));
+  printf("\r\nBOOTROM DUMP: (%08x to %08x)\r\n", base, (base+max));
   for(int i = 0; i < max; i += 16) {
     int a0 = MEM_AT_OFFSET(base, i, 0);
     int a4 = MEM_AT_OFFSET(base, i, 4);
     int a8 = MEM_AT_OFFSET(base, i, 8);
     int ac =  MEM_AT_OFFSET(base, i, 0xc);
 
-    xprintf("0x%08x: %08X %08X %08X %08X\n", base + i, a0, a4, a8, ac);
+    printf("0x%08x: %08X %08X %08X %08X\r\n", base + i, a0, a4, a8, ac);
   }
 }
 
-struct pll_reg {
-  const char *name;
-  unsigned int addr;
-  unsigned int mask;
-};
-
-struct pll_reg pll_registers[] ={
+struct data_reg pll_registers[] ={
     { "A2W_PLLA_DIG0",   0x7e102000, 0x00ffffff }, { "A2W_PLLA_DIG1",   0x7e102004, 0x00ffffff }, { "A2W_PLLA_DIG2",   0x7e102008, 0x00ffffff },
     { "A2W_PLLA_DIG3",   0x7e10200c, 0x00ffffff }, { "A2W_PLLA_ANA0",   0x7e102010, 0x00ffffff }, { "A2W_PLLA_ANA1",   0x7e102014, 0x00ffffff }, 
     { "A2W_PLLA_ANA2",   0x7e102018, 0x00ffffff }, { "A2W_PLLA_ANA3",   0x7e10201c, 0x00ffffff }, { "A2W_PLLC_DIG0",   0x7e102020, 0x00ffffff }, 
@@ -147,14 +157,12 @@ struct pll_reg pll_registers[] ={
     { "A2W_PLLH_MULTI",  0x7e102f60, 0xffffffff }
 };
 
-#define PLL_REG_OFFSET(addr) (*(volatile unsigned int *)(addr))
-
 void dump_pll_regs() {
-  xprintf("\nA2W PLL DEFAULT REGISTER VALUES DUMP:\n");
+  printf("\r\nA2W PLL DEFAULT REGISTER VALUES DUMP:\r\n");
   for(unsigned int x = 0; x < 150; x++) {
-    struct pll_reg reg = pll_registers[x];
-    unsigned int raw_reg_val = PLL_REG_OFFSET(reg.addr);
+    struct data_reg reg = pll_registers[x];
+    unsigned int raw_reg_val = DEV_REG_OFFSET(reg.addr);
     unsigned int reg_val_masked = raw_reg_val & reg.mask;
-    xprintf("\t%016s: 0x%08x\n", reg.name, reg_val_masked);
+    printf("\t%016s: 0x%08x\r\n", reg.name, reg_val_masked);
   }
 }
