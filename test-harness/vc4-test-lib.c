@@ -58,17 +58,29 @@ void dump_otp_data() {
   sleep_otp();
 }
 
+#define DEV_REG_OFFSET(addr) (*(volatile unsigned int *)(addr))
+
+struct data_reg {
+  const char *name;
+  unsigned int addr;
+  unsigned int mask;
+};
+
+struct data_reg otp_registers[] = {
+  { "OTP_BOOTMODE_REG", 0x7e20f000, 0xffffffff }, { "OTP_CONFIG_REG",          0x7e20f004, 0x00000007 }, { "OTP_CTRL_LO_REG",     0x7e20f008, 0xffffffff },
+  { "OTP_CTRL_HI_REG",  0x7e20f00c, 0x0000ffff }, { "OTP_BITSEL_REG",          0x7e20f010, 0xffffffff }, { "OTP_DATA_REG",        0x7e20f014, 0x0000001f },
+  { "OTP_ADDR_REG",     0x7e20f018, 0x0000001f }, { "OTP_WRITE_DATA_READ_REG", 0x7e20f01c, 0xffffffff }, { "OTP_INIT_STATUS_REG", 0x7e20f020, 0xffffffff }
+};
+
 void dump_otp_regs() {
   xprintf("OTP REGISTER DUMP:\n");
-  xprintf("\tBOOTMODE:        0x%08x\n"
-	  "\tCONFIG:          0x%08x\n", OTP_BOOTMODE_REG, OTP_CONFIG_REG);
-  xprintf("\tCTRL_LO:         0x%08x\n"
-	  "\tCNTRL_HI:        0x%08x\n", OTP_CTRL_LO_REG, OTP_CTRL_HI_REG);
-  xprintf("\tBITSEL:          0x%08x\n"
-	  "\tDATA:            0x%08x\n", OTP_BITSEL_REG, OTP_DATA_REG);
-  xprintf("\tADDR:            0x%08x\n"
-	  "\tWRITE_DATA_READ: 0x%08x\n", OTP_ADDR_REG, OTP_WRITE_DATA_READ_REG);
-  xprintf("\tINIT_STATUS:     0x%08x\n", OTP_INIT_STATUS_REG);
+  for( int i = 0; i < 9; i++ ) {
+    data_reg reg = otp_registers[i];
+    unsigned int raw_val = DEV_REG_OFFSET(reg.addr);
+    unsigned int mask = reg.mask;
+    unsigned int actual = raw_val & mask;
+    xprintf("\t%023s:\t0x%08x\n", reg.name, actual);
+  }
 }
 
 #define MEM_AT_OFFSET(addr, base, offset) (*(volatile unsigned int*)((addr)+(base)+(offset)))
@@ -86,13 +98,7 @@ void dump_bootrom() {
   }
 }
 
-struct pll_reg {
-  const char *name;
-  unsigned int addr;
-  unsigned int mask;
-};
-
-struct pll_reg pll_registers[] ={
+struct data_reg pll_registers[] ={
     { "A2W_PLLA_DIG0",   0x7e102000, 0x00ffffff }, { "A2W_PLLA_DIG1",   0x7e102004, 0x00ffffff }, { "A2W_PLLA_DIG2",   0x7e102008, 0x00ffffff },
     { "A2W_PLLA_DIG3",   0x7e10200c, 0x00ffffff }, { "A2W_PLLA_ANA0",   0x7e102010, 0x00ffffff }, { "A2W_PLLA_ANA1",   0x7e102014, 0x00ffffff }, 
     { "A2W_PLLA_ANA2",   0x7e102018, 0x00ffffff }, { "A2W_PLLA_ANA3",   0x7e10201c, 0x00ffffff }, { "A2W_PLLC_DIG0",   0x7e102020, 0x00ffffff }, 
@@ -146,8 +152,6 @@ struct pll_reg pll_registers[] ={
     { "A2W_PLLH_PIXR",   0x7e102d60, 0x000003ff }, { "A2W_PLLH_STSR",   0x7e102e60, 0x000003ff }, { "A2W_XOSC_CTRLR",  0x7e102990, 0x0000037f },
     { "A2W_PLLH_MULTI",  0x7e102f60, 0xffffffff }
 };
-
-#define PLL_REG_OFFSET(addr) (*(volatile unsigned int *)(addr))
 
 void dump_pll_regs() {
   xprintf("\nA2W PLL DEFAULT REGISTER VALUES DUMP:\n");
