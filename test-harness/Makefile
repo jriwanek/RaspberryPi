@@ -1,4 +1,4 @@
-CFLAGS=-O0 -I./include
+CFLAGS=-O0 -I./include -I./lib -I./hardware-support -ffunction-sections -fdata-sections
 LDFLAGS=-T ./linker.ld
 ASFLAGS=
 OBJCOPYFLAGS=-O binary
@@ -9,7 +9,9 @@ LD=${CROSS}-ld
 AS=${CROSS}-as
 OBJCOPY=${CROSS}-objcopy
 
-FILES=vc4-hardware.o vc4-tests.o vc4-test-lib.o vc4-runner.o
+FILES=lib/vc4lib.o lib/panic.o lib/udelay.o hardware-support/pll.o hardware-support/uart.o \
+	hardware-support/vpustatus.o hardware-support/setup-functions.o hardware-support/sdram.o \
+	vc4-hardware.o vc4-tests.o vc4-test-lib.o vc4-runner.o
 
 .c.o:
 	${CC} ${CFLAGS} -c $< -o $@
@@ -18,9 +20,11 @@ FILES=vc4-hardware.o vc4-tests.o vc4-test-lib.o vc4-runner.o
 	${AS} ${ASFLAGS} $< -o $@
 
 all: ${FILES}
-	${CC} ${CFLAGS} ${LDFLAGS} ${FILES} -o test-bootcode.elf
+	${CC} ${CFLAGS} ${LDFLAGS} ${FILES} -o test-bootcode.elf -lm
 	${OBJCOPY} ${OBJCOPYFLAGS} test-bootcode.elf test-bootcode.bin
 
 clean:
-	@rm *.o
-	@rm test-bootcode.elf test-bootcode.bin
+	@find . -depth -type f -iname '*.o' -delete
+	@if [ -e test-bootcode.elf ]; then rm test-bootcode.elf; fi;
+	@if [ -e test-bootcode.bin ]; then rm test-bootcode.bin; fi;
+

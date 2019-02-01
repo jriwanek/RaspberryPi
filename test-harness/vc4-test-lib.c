@@ -1,6 +1,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdint.h>
+#include <stdbool.h>
 #include <test-helpers.h>
 #include <hardware.h>
 #include <bcm2708_chip/otp.h>
@@ -62,8 +63,6 @@ void dump_otp_data() {
   sleep_otp();
 }
 
-#define DEV_REG_OFFSET(addr) (*(volatile unsigned int *)(addr))
-
 struct data_reg {
   const char *name;
   unsigned int addr;
@@ -80,7 +79,7 @@ void dump_otp_regs() {
   printf("OTP REGISTER DUMP:\r\n");
   for( int i = 0; i < 9; i++ ) {
     struct data_reg reg = otp_registers[i];
-    unsigned int raw_val = DEV_REG_OFFSET(reg.addr);
+    unsigned int raw_val = HW_REGISTER_RW(reg.addr);
     unsigned int mask = reg.mask;
     unsigned int actual = raw_val & mask;
     printf("\t%023s:\t0x%08x\r\n", reg.name, actual);
@@ -161,8 +160,40 @@ void dump_pll_regs() {
   printf("\r\nA2W PLL DEFAULT REGISTER VALUES DUMP:\r\n");
   for(unsigned int x = 0; x < 150; x++) {
     struct data_reg reg = pll_registers[x];
-    unsigned int raw_reg_val = DEV_REG_OFFSET(reg.addr);
+    unsigned int raw_reg_val = HW_REGISTER_RW(reg.addr);
     unsigned int reg_val_masked = raw_reg_val & reg.mask;
     printf("\t%016s: 0x%08x\r\n", reg.name, reg_val_masked);
   }
+}
+
+struct paired_reg {
+  const char *name;
+  unsigned int addr[2];
+  unsigned int mask;
+};
+
+struct paired_reg match_regs[] = {
+  { "OTP_BOOTMODE_REG",    { 0x7e20f000, 0xfe20f000 }, 0xffffffff }, { "OTP_CONFIG_REG",          { 0x7e20f004, 0xfe20f004 }, 0x00000007 },
+  { "OTP_CTRL_LO_REG",     { 0x7e20f008, 0xfe20f008 }, 0xffffffff }, { "OTP_CTRL_HI_REG",         { 0x7e20f00c, 0xfe20f00c }, 0x0000ffff },
+  { "OTP_BITSEL_REG",      { 0x7e20f010, 0xfe20f010 }, 0xffffffff }, { "OTP_DATA_REG",            { 0x7e20f014, 0xfe20f014 }, 0x0000001f },
+  { "OTP_ADDR_REG",        { 0x7e20f018, 0xfe20f018 }, 0x0000001f }, { "OTP_WRITE_DATA_READ_REG", { 0x7e20f01c, 0xfe20f01c }, 0xffffffff },
+  { "OTP_INIT_STATUS_REG", { 0x7e20f020, 0xf220f020 }, 0xffffffff }
+};
+
+void range_match_test() {
+  printf("\r\nDoes 0xfe000000 - 0xffffffff match 0x7e000000 to 0x7fffffff ?\r\n");
+  bool all_match = true;
+  for(int i = 0; i < 9; i++) {
+    struct paired_reg work = match_regs[i];
+    printf(">>> 0x%08X -> 0x%08X\r\n", work.addr[0], work.addr[1]);
+    unsigned int val_a = (*((volatile unsigned int *)(work.addr[0])));
+    printf(">>> A: 0x%08X\r\n", val_a);
+    unsigned int val_b = (*((volatile unsigned int *)(work.addr[1])));
+    printf(">>> B: 0x%08X\r\n", val_a);
+    bool match = (val_a == val_b);
+    printf(">>> M: %u\r\n", match);
+    if(!match) all_match = false;
+    printf("\t%024s: 0x%08x == 0x%08x ? > %s\r\n", work.name, val_a, val_b, match?"TRUE":"FALSE");
+  }
+  printf("All Matched? %s\r\n", all_match?"TRUE":"FALSE");
 }
