@@ -19,7 +19,7 @@ void __vc4_init(void) {
   setup_interrupts();
   __asm__ __volatile__("version r0\nmov r1, %0\nst r0, (r1)\n" : "=m" (g_CPUID) : : "r0", "r1");
   setup_pll();
-  uart_init(125000000, 134);
+  uart_init(250000000, 270);
   
   IC0_VADDR = irq_stack;
   IC1_VADDR = irq_stack;
