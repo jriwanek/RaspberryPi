@@ -185,7 +185,7 @@ void range_match_test() {
     unsigned int val_a = HW_REGISTER_RW(work.addr[0]) & work.mask;
     printf(">>> A: 0x%08X\r\n", val_a);
     unsigned int val_b = HW_REGISTER_RW(work.addr[1]) & work.mask;
-    printf(">>> B: 0x%08X\r\n", val_a);
+    printf(">>> B: 0x%08X\r\n", val_b);
     bool match = (val_a == val_b);
     printf(">>> M: %u\r\n", match);
     if(!match) all_match = false;
