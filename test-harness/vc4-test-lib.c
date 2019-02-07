@@ -181,13 +181,9 @@ void range_match_test() {
   bool all_match = true;
   for(int i = 0; i < 9; i++) {
     struct paired_reg work = match_regs[i];
-    printf(">>> 0x%08X -> 0x%08X\r\n", work.addr[0], work.addr[1]);
     unsigned int val_a = HW_REGISTER_RW(work.addr[0]) & work.mask;
-    printf(">>> A: 0x%08X\r\n", val_a);
     unsigned int val_b = HW_REGISTER_RW(work.addr[1]) & work.mask;
-    printf(">>> B: 0x%08X\r\n", val_b);
     bool match = (val_a == val_b);
-    printf(">>> M: %u\r\n", match);
     if(!match) all_match = false;
     printf("\t% 24s: 0x%08x == 0x%08x ? > %s\r\n", work.name, val_a, val_b, match?"TRUE":"FALSE");
   }
