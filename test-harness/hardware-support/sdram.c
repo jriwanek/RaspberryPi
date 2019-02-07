@@ -53,7 +53,11 @@ extern uint32_t g_CPUID;
 
 #define PVT_calibrate_request 0x1
 
+#ifdef DEBUG
 #define logf(fmt, ...) printf("[SDRAM:%s]: " fmt, __FUNCTION__, ##__VA_ARGS__);
+#else
+#define logf(fmt, ...)
+#endif
 
 uint32_t g_RAMSize = RAM_SIZE_UNKNOWN;
 
