@@ -27,4 +27,3 @@ clean:
 	@find . -depth -type f -iname '*.o' -delete
 	@if [ -e test-bootcode.elf ]; then rm test-bootcode.elf; fi;
 	@if [ -e test-bootcode.bin ]; then rm test-bootcode.bin; fi;
-
