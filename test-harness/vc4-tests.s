@@ -27,4 +27,4 @@ btest_run:
 	mov r0, sr
 	add.m sp, r6, #8
 	ldm r6,pc,(sp++)
-	
+

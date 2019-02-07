@@ -14,24 +14,10 @@ There are also 3 dumps of data currently implemented:
 3) Raspberry Pi bootrom³
 
 ## Test Environment
-The code runs in supervisor mode on the bare metal of the VC4, with the global pointer (r24, pointing to the 'data segment', in this case) pointing to 0x8000c000 and the stack pointer (r25) given a starting value of 0x8000f000. All features of the base C language are available, but there is no "standard library" as might otherwise be expected. The mini-uart is active at 115200 baud and unless the PLL is initialized, the system runs at 19.2MHz.⁴ A variadic function is provided for formatted output, implementing all the expected backslash escapes⁵ and providing a small range of printf style formatters.⁶ There is no ``malloc()`` or any similar functions - at this point the project team is very small and focused on other tasks. There are some headers available, each specifically named and we do not set any ``-I`` flags, so they are not available for the "system include" style.
+The code runs in supervisor mode on the bare metal of the VC4, with the global pointer (r24, pointing to the 'data segment', in this case) aligned to start 0x1000 after the end of the code and the stack pointer (r25) aligned to start 0x10000 after the end of the data segment. Thanks to the use of @itzsor's vc4 toolchain we have a decently complete standard C library available, with all output and input redirecting through the mini-uart.
 
 ## Test "Library"
-As mentioned in the "Test Environment" section there is a printf-like function provided, it has the following format/transposition options:
-* ``c`` single character
-* ``s`` string - can be space-padded (right aligned) by using a form similar to the classic C style - ie: ``%32s`` will left-pad the string with spaces for a field width of at least 32 characters - larger than that and the string will overflow the field.
-* ``u`` or ``i`` unsigned integer - can be zero-padded following the same format as string output with the same caveat -- starting the field width with a ``0`` will pad with zeros instead of spaces.
-* ``d`` signed integer (same as ``u`` or ``i``)
-* ``x`` unsigned integer, as hexidecimal, zero-padding with all caveats
-* ``o`` like ``x`` but in octal, zero-padding with all caveats
-* ``b`` output as binary, zero-padding with all caveats
-* ``%`` output a literal ``%``
-
-Definition/description to be found in ``vc4-stdlib.h``
-
-System varargs - the classic C varargs setup - are available (sans va_copy) in ``vc4-stdargs.h``.
-
-Hardware register constants and access information currently in ``system_defs.h`` - this will change.
+In 'include/' you'll find some custom headers defining things - some borrowed from @christinaa's RPi-OpenFirmware - and the entire required chunk of headers from BroadCom's code-dump. This should cover all of the hardware and access needed.
 
 ## Adding Tests
 For a test that is possible with just C, all you need to do is write the test, add a declaration to ``current-tests.h`` and call the test from ``vc4-runner.c``'s ``tests()`` function. If you added the test as a new source file, you'll need to add that to the Makefile as well. Any extra peripheral registers should be added to ``system_defs.h``.
@@ -44,9 +30,3 @@ If you have a test that needs assembly, then add it to ``vc4-tests.s`` and follo
 ² None of the available documentation covers what the default values of these registers are, unlike almost all the other registers. This is needed for accurate emulation. The contents of the OTP memory itself is also needed for accurate emulation. None of the registers that are masked-out by the ``vgencmd otp_dump`` are recorded anywhere, as the information is masked-out for reason, possibly Broadcom mandated.
 
 ³ The bootrom is one of the key parts of the Raspberry Pi starting and is completely undocumented, to my knowledge. It may have some effect on the runtime environment - or even be referenced - from the code in ``bootcode.bin``. For this reason a dump is needed - one that can be converted back to the binary form - for accurate emulation.
-
-⁴ Until the PLL is configured the system runs on the clock provided by a 19.2MHz crystal on the board.
-
-⁵ As the code runs through the GNU build system, the "backslash escapes" are actually part of that system - even the GNU Assembler has automatic conversion of them.
-
-⁶ These are somewhat compatible with classic printf formatters, but the provided xprintf is not printf and you should not expect them to always work the same or have the same features. See the "Test Library" section for details.
