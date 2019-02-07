@@ -6,6 +6,7 @@
 #include <hardware.h>
 #include <bcm2708_chip/otp.h>
 #include "test-support.h"
+#include "lib/udelay.h"
 
 void test_version() {
   printf(">> test of \"version r0\" (or, alternatively, \"mov r0, cpuid\") operation\r\n");
@@ -21,25 +22,20 @@ void test_btest() {
 	  "btest match sign-bit sr: 0x%08x\r\n", no_match, match, ztest);
 }
 
-void otp_wait(unsigned int cyc) {
-  int c = 0;
-  while( c < cyc ) c++;
-}
-
 void wake_otp() {
   OTP_CONFIG_REG = 3;
-  otp_wait(0x14);
+  udelay(0x14);
   OTP_CTRL_LO_REG = 0;
   OTP_CTRL_HI_REG = 0;
-  otp_wait(0x14);
+  udelay(0x14);
   OTP_CONFIG_REG = 2;
-  otp_wait(0x14);
+  udelay(0x14);
 }
 
 void sleep_otp() {
   OTP_CTRL_LO_REG = 0;
   OTP_CTRL_HI_REG = 0;
-  otp_wait(0x14);
+  udelay(0x14);
   OTP_CONFIG_REG = 0;
 }
 
@@ -49,10 +45,10 @@ void dump_otp_data() {
   for(int i = 0; i < 0x80; i++) {
     int reg;
     OTP_ADDR_REG = i;
-    otp_wait(0x14);
+    udelay(0x14);
     OTP_CTRL_HI_REG = 0;
     OTP_CTRL_LO_REG = 0;
-    otp_wait(0x28);
+    udelay(0x28);
     int r = OTP_CTRL_LO_REG;
     OTP_CTRL_LO_REG = 1;
     r = OTP_CTRL_LO_REG;
@@ -186,14 +182,14 @@ void range_match_test() {
   for(int i = 0; i < 9; i++) {
     struct paired_reg work = match_regs[i];
     printf(">>> 0x%08X -> 0x%08X\r\n", work.addr[0], work.addr[1]);
-    unsigned int val_a = (*((volatile unsigned int *)(work.addr[0])));
+    unsigned int val_a = HW_REGISTER_RW(work.addr[0]) & work.mask;
     printf(">>> A: 0x%08X\r\n", val_a);
-    unsigned int val_b = (*((volatile unsigned int *)(work.addr[1])));
+    unsigned int val_b = HW_REGISTER_RW(work.addr[1]) & work.mask;
     printf(">>> B: 0x%08X\r\n", val_a);
     bool match = (val_a == val_b);
     printf(">>> M: %u\r\n", match);
     if(!match) all_match = false;
-    printf("\t%024s: 0x%08x == 0x%08x ? > %s\r\n", work.name, val_a, val_b, match?"TRUE":"FALSE");
+    printf("\t% 24s: 0x%08x == 0x%08x ? > %s\r\n", work.name, val_a, val_b, match?"TRUE":"FALSE");
   }
   printf("All Matched? %s\r\n", all_match?"TRUE":"FALSE");
 }

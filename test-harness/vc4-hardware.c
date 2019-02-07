@@ -7,6 +7,8 @@
 #include <pll.h>
 #include <sdram.h>
 #include <init-funcs.h>
+#include <stdio.h>
+#include "lib/udelay.h"
 
 uint32_t g_CPUID;
 extern uint32_t irq_stack;
@@ -21,8 +23,8 @@ void __vc4_init(void) {
   setup_pll();
   uart_init(250000000, 270);
   
-  IC0_VADDR = irq_stack;
-  IC1_VADDR = irq_stack;
+  IC0_VADDR = 0x1B000;
+  IC1_VADDR = 0x1B000;
   
   __asm__ __volatile__("ei");
   

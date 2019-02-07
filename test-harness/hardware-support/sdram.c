@@ -495,6 +495,7 @@ static void selftest() {
 #undef RT_ASSERT
 
 void sdram_init() {
+  printf("SDRAM INIT\r\n");
 	uint32_t vendor_id, bc;
 
 	logf("(0) SD_CS = 0x%X\n", SD_CS);
