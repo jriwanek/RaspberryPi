@@ -1,4 +1,4 @@
-CFLAGS=-O2 -I./include -static
+CFLAGS=-O2 -I./hardware-support -I./include -I./lib -static
 LDFLAGS=-T ./linker.ld
 ASFLAGS=
 OBJCOPYFLAGS=-O binary

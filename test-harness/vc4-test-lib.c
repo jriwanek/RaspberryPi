@@ -2,6 +2,9 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include <malloc.h>
+#include <string.h>
+#include <errno.h>
 #include <test-helpers.h>
 #include <hardware.h>
 #include <bcm2708_chip/otp.h>
@@ -188,4 +191,15 @@ void range_match_test() {
     printf("\t% 24s: 0x%08x == 0x%08x ? > %s\r\n", work.name, val_a, val_b, match?"TRUE":"FALSE");
   }
   printf("All Matched? %s\r\n", all_match?"TRUE":"FALSE");
+}
+
+void malloc_free_test() {
+  char *buff = malloc(256);
+  if(buff == NULL) {
+    printf("malloc failed: %s\r\n", strerror(errno));
+    return;
+  }
+
+  printf("buffer at %p\r\n", buff);
+  free(buff);
 }

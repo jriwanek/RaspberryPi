@@ -10,7 +10,6 @@ void main() {
 	  "Vesion 1.0-alpha3, (c) 2019 Daniel \"DshadowWolf\" Hazelton and Jasmine \"jriwanek\" Iwanek\r\n"
 	  "Open Source - Released under the MIT License, see https://opensource.org/licenses/MIT\r\n");
   tests();
-  free(c);
 }
 
 
@@ -22,5 +21,6 @@ void tests() {
   dump_bootrom();
   dump_pll_regs();
   range_match_test();
+  malloc_free_test();
 }
 
