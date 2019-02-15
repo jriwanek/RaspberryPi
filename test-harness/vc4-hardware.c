@@ -13,6 +13,7 @@ _exit (int status)
   printf("exited: %d\n", status);
   register int r0 __asm__("r0") = status;
   __asm__ __volatile__ ("sleep" : : "r" (r0));
+  for(;;); // make sure we don't return
 }
 
 void setup_uart(unsigned int baud_reg) {

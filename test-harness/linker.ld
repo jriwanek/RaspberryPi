@@ -4,9 +4,8 @@ OUTPUT_ARCH(vc4)
 ENTRY(_start)
 GROUP(-lgloss -lc)
 
-MEMORY
-{
-  ram (rwx) : ORIGIN = 0x80000000, LENGTH = 0x20000000
+MEMORY {
+  ram (rwx) : ORIGIN = 00, LENGTH = 0x08000000
 }
 
 SECTIONS {
@@ -31,24 +30,29 @@ SECTIONS {
      _etext = .;
    } >ram =0
 
-   . = ALIGN(0x1000);
-   data_seg = .;
-   .data : {
-     . = ALIGN(4);
-     _fdata = .;
-     *(.data .data.* .gnu.linkonce.d.*)
-     *(.data1)
-     SORT(CONSTRUCTORS)
-     *(.sdata .sdata.* .gnu.linkonce.s.*)
-     _edata = .;
-   } >ram
-   
+   /* Exception handlers */
+   .eh_frame_hdr : { *(.eh_frame_hdr) } > ram
+   .eh_frame : { KEEP (*(.eh_frame)) } > ram
+   .gcc_except_table : { *(.gcc_except_table) *(.gcc_except_table.*) } > ram
+    
    .rodata : {
      . = ALIGN(4);
      _frodata = .;
      *(.rodata .rodata.* .gnu.linkonce.r.*) 
      *(.rodata1)
      _erodata = .;
+   } >ram
+   
+   . = ALIGN(0x1000);
+   data_seg = .;
+   .data : {
+     . = ALIGN(4);
+      _fdata = .;
+     *(.data .data.* .gnu.linkonce.d.*)
+     *(.data1)
+     SORT(CONSTRUCTORS)
+     *(.sdata .sdata.* .gnu.linkonce.s.*)
+     _edata = .;
    } >ram
 
    .bss : {
@@ -65,11 +69,6 @@ SECTIONS {
      _end = .;
      PROVIDE (end = .);
    } >ram
-
-  /* Exception handlers */
-  .eh_frame_hdr : { *(.eh_frame_hdr) } > ram
-  .eh_frame : { KEEP (*(.eh_frame)) } > ram
-  .gcc_except_table : { *(.gcc_except_table) *(.gcc_except_table.*) } > ram
 
    stack_seg = ALIGN(0x10000);
    PROVIDE(_fstack = stack_seg);
