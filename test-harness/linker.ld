@@ -72,7 +72,9 @@ SECTIONS {
 
    stack_seg = ALIGN(0x10000);
    PROVIDE(_fstack = stack_seg);
-
+   . = . + 0x20000;
+   PROVIDE(irq_stack = ALIGN(4));
+   
   /* Stabs debugging sections.  */
   .stab          0 : { *(.stab) }
   .stabstr       0 : { *(.stabstr) }
