@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdarg.h>
-#include <malloc.h>
 #include "current-tests.h"
 #include "lib/udelay.h"
 
@@ -8,9 +7,8 @@ void tests();
 
 void main() {
   printf("\r\n\r\n@dshadowwolfs and @jriwaneks RPi reverse-engineering test harness\r\n"
-	  "Vesion 1.0-alpha2, (c) 2019 Daniel \"DshadowWolf\" Hazelton and Jasmine \"jriwanek\" Iwanek\r\n"
+	  "Vesion 1.0-alpha3, (c) 2019 Daniel \"DshadowWolf\" Hazelton and Jasmine \"jriwanek\" Iwanek\r\n"
 	  "Open Source - Released under the MIT License, see https://opensource.org/licenses/MIT\r\n");
-  char *c = malloc(1);
   tests();
   free(c);
 }

@@ -1,4 +1,4 @@
-CFLAGS=-O0 -I./include -I./lib -I./hardware-support -ffunction-sections -fdata-sections # -DDEBUG
+CFLAGS=-O2 -I./include -static
 LDFLAGS=-T ./linker.ld
 ASFLAGS=
 OBJCOPYFLAGS=-O binary

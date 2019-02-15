@@ -13,6 +13,15 @@
 uint32_t g_CPUID;
 extern uint32_t irq_stack;
 
+__attribute__((noreturn)) void
+_exit (int status)
+{
+  printf("exited: %d\n", status);
+  register int r0 __asm__("r0") = status;
+  __asm__ __volatile__ ("sleep" : : "r" (r0));
+  for(;;); // make sure we don't return
+}
+
 extern void setup_exception_table();
 void setup_interrupts();
 
