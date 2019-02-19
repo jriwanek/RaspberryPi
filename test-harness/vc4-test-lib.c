@@ -85,7 +85,7 @@ void dump_otp_regs() {
 #define MEM_AT_OFFSET(addr, base, offset) (*(volatile unsigned int*)((addr)+(base)+(offset)))
 void dump_bootrom() {
   unsigned int base = 0x60000000;
-  unsigned int max = 0x8000;
+  unsigned int max = 0x10000;
   printf("\r\nBOOTROM DUMP: (%08x to %08x)\r\n", base, (base+max));
   for(int i = 0; i < max; i += 16) {
     int a0 = MEM_AT_OFFSET(base, i, 0);
