@@ -31,6 +31,16 @@ void __vc4_init(void) {
   sdram_init();
 }
 
+__attribute__((noreturn)) void
+_exit (int status)
+{
+  printf("exited: %d\n", status);
+  register int r0 __asm__("r0") = status;
+  __asm__ __volatile__ ("sleep" : : "r" (r0));
+  for(;;); // make sure we don't return
+}
+
+
 #define mmio_read32(addr) HW_REGISTER_RW(addr)
 #define mmio_write32(addr, value) (HW_REGISTER_RW(addr) = value)
 
