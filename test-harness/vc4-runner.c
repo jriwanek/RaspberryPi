@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <stdarg.h>
 #include "current-tests.h"
 #include "lib/udelay.h"
@@ -10,7 +11,6 @@ void main() {
 	  "Vesion 1.0-alpha3, (c) 2019 Daniel \"DshadowWolf\" Hazelton and Jasmine \"jriwanek\" Iwanek\r\n"
 	  "Open Source - Released under the MIT License, see https://opensource.org/licenses/MIT\r\n");
   tests();
-  free(c);
 }
 
 
