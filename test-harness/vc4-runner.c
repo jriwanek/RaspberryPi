@@ -22,5 +22,6 @@ void tests() {
   dump_bootrom();
   dump_pll_regs();
   range_match_test();
+  malloc_free_test();
 }
 
