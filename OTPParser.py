@@ -227,8 +227,8 @@ REGIONS = {
     'customer_seven':         42,  #
     'customer_eight':         43,  #
     'unknown_44':             44,
-    'codec_key_one':          45,  # Codec License Key #1
-    'codec_key_two':          46,  # Codec License Key #2
+    'codec_key_one':          45,  # Codec License Key #1 (MPEG2)
+    'codec_key_two':          46,  # Codec License Key #2 (VC-1?)
     'unknown_47':             47,
     'unknown_48':             48,
     'unknown_49':             49,
@@ -558,8 +558,8 @@ print('           Customer Region Five :', get('customer_five', 'hex'))
 print('            Customer Region Six :', get('customer_six', 'hex'))
 print('          Customer Region Seven :', get('customer_seven', 'hex'))
 print('          Customer Region Eight :', get('customer_eight', 'hex'))
-print('          Codec License Key One :', get('codec_key_one', 'hex'))
-print('          Codec License Key Two :', get('codec_key_two', 'hex'))
+print('              MPEG2 License Key :', get('codec_key_one', 'hex'))
+print('               VC-1 License Key :', get('codec_key_two', 'hex'))
 print('                    MAC Address :', format_mac())
 print('                  Advanced Boot :', get('advanced_boot', 'hex'), get('advanced_boot', 'binary'))
 print('             ETH_CLK Output Pin :', pretty_string(advanced_boot('bits_0_to_6'), False))
