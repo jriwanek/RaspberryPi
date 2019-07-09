@@ -53,8 +53,8 @@ MEMORY_SIZES = {
     '256':       '000',    # 0
     '512':       '001',    # 1
     '1024':      '010',    # 2
-    'unknown_3': '011',    # 3
-    'unknown_4': '100',    # 4
+    '2048':      '011',    # 3
+    '4096':      '100',    # 4
     'unknown_5': '101',    # 5
     'unknown_6': '110',    # 6
     'unknown_7': '111',    # 7
@@ -89,7 +89,7 @@ PROCESSORS = {
     'BCM2835':   '0000',  # 0
     'BCM2836':   '0001',  # 1
     'BCM2837':   '0010',  # 2
-    'unknown_3': '0011',  # 3
+    'BCM2711':   '0011',  # 3
     'unknown_4': '0100',  # 4
     'unknown_5': '0101',  # 5
     'unknown_6': '0110',  # 6
@@ -123,7 +123,9 @@ BOARD_TYPES = {
     'Zero W':    '00001100',  # c
     '3B+':       '00001101',  # d
     '3A+':       '00001110',  # e
-    'unknown_f': '00001111',  # f (Not in known use)
+    'Internal':  '00001111',  # f
+    'CM3+':      '00010000', # 10
+    '4B':        '00010001‬', # 11
     'unknown':   ''
 }
 BOARD_TYPES_AS_STRING = dict((v, k) for k, v in list(BOARD_TYPES.items()))
@@ -228,7 +230,7 @@ REGIONS = {
     'customer_eight':         43,  #
     'unknown_44':             44,
     'codec_key_one':          45,  # Codec License Key #1 (MPEG2)
-    'codec_key_two':          46,  # Codec License Key #2 (VC-1?)
+    'codec_key_two':          46,  # Codec License Key #2 (VC-1)
     'unknown_47':             47,
     'unknown_48':             48,
     'unknown_49':             49,
