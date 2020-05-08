@@ -126,7 +126,7 @@ BOARD_TYPES = {
     '3A+':       '00001110',  # e
     'Internal':  '00001111',  # f
     'CM3+':      '00010000',  # 10
-    '4B':        '00010001‬',  # 11
+    '4B':        '00010001',  # 11
     'unknown':   ''
 }
 BOARD_TYPES_AS_STRING = dict((v, k) for k, v in list(BOARD_TYPES.items()))
