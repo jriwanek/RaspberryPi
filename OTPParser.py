@@ -338,11 +338,11 @@ def revision(name):
         'manufacturer':          (12, 16),  # Manufacturer of the board
         'memory_size':           (9, 12),   # Amount of RAM the board has
         'new_flag':              (8, 9),    # If set, this board uses the new versioning scheme
-        'bit_7':                 (7, 8)     # Unused
-        'warrenty':              (6, 7)     # Warrenty Bit
-        'bits_3_to_5':           (3, 6)     # Unused
-        'otp_read':              (2, 3)     # OTP Read Bit
-        'otp_program':           (1, 2)     # OTP Program Bit
+        'bit_7':                 (7, 8),    # Unused
+        'warrenty':              (6, 7),    # Warrenty Bit
+        'bits_3_to_5':           (3, 6),    # Unused
+        'otp_read':              (2, 3),    # OTP Read Bit
+        'otp_program':           (1, 2),    # OTP Program Bit
         'overvoltage':           (0, 1)     # Overvoltage Bit
     }[name]
     __revision = get('revision_number', 'binary')
