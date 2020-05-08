@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Raspberry Pi OTP Dump Parser
 
  Copyright 2019 Jasmine Iwanek & Dylan Morrison
