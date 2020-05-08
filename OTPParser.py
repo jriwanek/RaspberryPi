@@ -40,7 +40,7 @@ except ImportError:
     sys.exit('OTPParser requires future!')
 
 try:
-    from builtins import dict, hex, int, open, range, str
+    from builtins import dict, int, open, range, str
 except ImportError:
     sys.exit("OTPParser requires future! (Cant import 'builtins'")
 
@@ -221,17 +221,17 @@ REGIONS = {
     'unknown_33':             33,
     'unknown_34':             34,
     'unknown_35':             35,
-    'customer_one':           36,  #
-    'customer_two':           37,  #
-    'customer_three':         38,  #
-    'customer_four':          39,  #
-    'customer_five':          40,  #
-    'customer_six':           41,  #
-    'customer_seven':         42,  #
-    'customer_eight':         43,  #
+    'customer_one':           36,  # Customer OTP Region #1
+    'customer_two':           37,  # Customer OTP Region #2
+    'customer_three':         38,  # Customer OTP Region #3
+    'customer_four':          39,  # Customer OTP Region #4
+    'customer_five':          40,  # Customer OTP Region #5
+    'customer_six':           41,  # Customer OTP Region #6
+    'customer_seven':         42,  # Customer OTP Region #7
+    'customer_eight':         43,  # Customer OTP Region #8
     'unknown_44':             44,
     'codec_key_one':          45,  # Codec License Key #1 (MPEG2)
-    'codec_key_two':          46,  # Codec License Key #2 (VC-1)
+    'codec_key_two':          46,  # Codec License Key #2 (WVC-1)
     'unknown_47':             47,
     'unknown_48':             48,
     'unknown_49':             49,
@@ -278,19 +278,19 @@ def is_hex(string):
 def control(name):
     """Handler for region 16."""
     indices = {
-        'bits_0_to_7':   (0, 8),    # OTP_JTAG_DEBUG_KEY_PARITY_START_BIT (0x24 & 0x64 seen here thus far)
-        'bits_8_to_15':  (8, 16),   # OTP_VPU_CACHE_KEY_PARITY_START_BIT (Only 0x28 seen thus far)
-        'bit_16':        (16, 17),  # OTP_JTAG_DISABLE_BITXXX
-        'bit_17':        (17, 18),  # OTP_JTAG_DISABLE_REDUNDANT_BITXXX
-        'bit_18':        (18, 19),  # OTP_MACROVISION_START_BITXXX
-        'bit_19':        (19, 20),  # Unknown/Unused
-        'bit_20':        (20, 21),  # OTP_MACROVISION_REDUNDANT_START_BITXXX
-        'bit_21':        (21, 22),  # Unknown/Unused
-        'bit_22':        (22, 23),  # OTP_DECRYPTION_ENABLE_FOR_DEBUGXXX
-        'bit_23':        (23, 24),  # Unknown/Unused
-        'bit_24':        (24, 25),  # OTP_ARM_DISABLE_BITXXX
-        'bit_25':        (25, 26),  # OTP_ARM_DISABLE_REDUNDANT_BITXXX
-        'bits_26_to_31': (26, 32)   # Unknown/Unused
+        'bits_0-5':   (26, 32),  # Unknown/Unused
+        'bit_6':      (25, 26),  # OTP_ARM_DISABLE_REDUNDANT_BITXXX
+        'bit_7':      (24, 25),  # OTP_ARM_DISABLE_BITXXX
+        'bit_8':      (23, 24),  # Unknown/Unused
+        'bit_9':      (22, 23),  # OTP_DECRYPTION_ENABLE_FOR_DEBUGXXX
+        'bit_10':     (21, 22),  # Unknown/Unused
+        'bit_11':     (20, 21),  # OTP_MACROVISION_REDUNDANT_START_BITXXX
+        'bit_12':     (19, 20),  # Unknown/Unused
+        'bit_13':     (18, 19),  # OTP_MACROVISION_START_BITXXX
+        'bit_14':     (17, 18),  # OTP_JTAG_DISABLE_REDUNDANT_BITXXX
+        'bit_15':     (16, 17),  # OTP_JTAG_DISABLE_BITXXX
+        'bits_16-23': (8, 16),   # OTP_VPU_CACHE_KEY_PARITY_START_BIT (Seen: 0x28)
+        'bits_24-31': (0, 8),    # OTP_JTAG_DEBUG_KEY_PARITY_START_BIT (Seen: 0x24 & 0x64)
     }[name]
     __control = get('control', 'binary')
     return __control[indices[0]: indices[1]]
@@ -299,21 +299,25 @@ def control(name):
 def bootmode(name):
     """Handler for region 17."""
     indices = {
-        'bit_0':         (31, 32),  # Unknown (Gordon hinted the Pi wouldn't boot with this set)
-        'bit_1':         (30, 31),  # Sets the oscillator frequency to 19.2MHz
-        'bit_2':         (29, 30),  # Unknown (Gordon hinted the Pi wouldn't boot with this set)
-        'bit_3':         (28, 29),  # Enables pull ups on the SDIO pins
-        'bits_4_to_18':  (13, 28),  # Unknown/Unused
-        'bit_19':        (12, 13),  # Enables GPIO bootmode
-        'bit_20':        (11, 12),  # Sets the bank to check for GPIO bootmode
-        'bit_21':        (10, 11),  # Enables booting from SD card
-        'bit_22':        (9, 10),   # Sets the bank to boot from (That's what Gordon said, Unclear)
-        'bits_26_to_27': (7, 9),    # Unknown/Unused
-        'bit_25':        (6, 7),    # Unknown (Is set on the Compute Module 3)
-        'bits_23_to_24': (4, 6),    # Unknown/Unused
-        'bit_28':        (3, 4),    # Enables USB device booting
-        'bit_29':        (2, 3),    # Enables USB host booting (Ethernet and Mass Storage)
-        'bits_30_31':    (0, 2)     # Unknown/Unused
+        'bit_0':      (31, 32),  # Unknown (Gordon hinted the Pi wouldn't boot with this set)
+        'bit_1':      (30, 31),  # Sets the oscillator frequency to 19.2MHz
+        'bit_2':      (29, 30),  # Unknown (Gordon hinted the Pi wouldn't boot with this set)
+        'bit_3':      (28, 29),  # Enables pull ups on the SDIO pins
+        'bit_4':      (27, 28),  # Set on PI4B
+        'bit_5':      (26, 27),  # Set on Pi4B
+        'bit_6':      (25, 26),  # Unknown/Unused
+        'bit_7':      (24, 25),  # Set on PI4B
+        'bits_8-18':  (13, 24),  # Unknown/Unused
+        'bit_19':     (12, 13),  # Enables GPIO bootmode
+        'bit_20':     (11, 12),  # Sets the bank to check for GPIO bootmode
+        'bit_21':     (10, 11),  # Enables booting from SD card
+        'bit_22':     (9, 10),   # Sets the bank to boot from (That's what Gordon said, Unclear)
+        'bits_23-24': (7, 9),    # Unknown/Unused
+        'bit_25':     (6, 7),    # Unknown (Is set on the Compute Module 3)
+        'bits_26-27': (4, 6),    # Unknown/Unused
+        'bit_28':     (3, 4),    # Enables USB device booting
+        'bit_29':     (2, 3),    # Enables USB host booting (Ethernet and Mass Storage)
+        'bits_31-30': (0, 2)     # Unknown/Unused
     }[name]
     __bootmode = get('bootmode', 'binary')
     return __bootmode[indices[0]: indices[1]]
@@ -322,8 +326,8 @@ def bootmode(name):
 def boot_signing_parity(name):
     """Handler for region 27."""
     indices = {
-        'bits_0_to_15':  (16, 32),  # 5050 (1B, 2B 1.1), 7373 (2B 1.2), 2727(CM3), 1f1f (3B+)
-        'bits_16_to_31': (0, 16)
+        'bits_0-15':  (16, 32),  # Data seen here
+        'bits_16-31': (0, 16),
     }[name]
     __boot_signing_parity = get('boot_signing_parity', 'binary')
     return __boot_signing_parity[indices[0]: indices[1]]
@@ -332,19 +336,19 @@ def boot_signing_parity(name):
 def revision(name):
     """Handler for region 30."""
     indices = {
-        'legacy_board_revision': (27, 32),  # Region used to store the legacy revision
-        'board_revision':        (28, 32),  # Revision of the board
-        'board_type':            (20, 28),  # Model of the board
-        'processor':             (16, 20),  # Installed Processor
-        'manufacturer':          (12, 16),  # Manufacturer of the board
-        'memory_size':           (9, 12),   # Amount of RAM the board has
-        'new_flag':              (8, 9),    # If set, this board uses the new versioning scheme
-        'bit_7':                 (7, 8),    # Unused
-        'warrenty':              (6, 7),    # Warrenty Bit
-        'bits_3_to_5':           (3, 6),    # Unused
-        'otp_read':              (2, 3),    # OTP Read Bit
+        'overvoltage':           (0, 1),    # Overvoltage Bit
         'otp_program':           (1, 2),    # OTP Program Bit
-        'overvoltage':           (0, 1)     # Overvoltage Bit
+        'otp_read':              (2, 3),    # OTP Read Bit
+        'bits_26-28':            (3, 6),    # Unused
+        'warranty':              (6, 7),    # Warranty Bit
+        'bit_24':                (7, 8),    # Unused
+        'new_flag':              (8, 9),    # If set, this board uses the new versioning scheme
+        'memory_size':           (9, 12),   # Amount of RAM the board has
+        'manufacturer':          (12, 16),  # Manufacturer of the board
+        'processor':             (16, 20),  # Installed Processor
+        'board_type':            (20, 28),  # Model of the board
+        'board_revision':        (28, 32),  # Revision of the board
+        'legacy_board_revision': (27, 32)   # Region used to store the legacy revision
     }[name]
     __revision = get('revision_number', 'binary')
     return __revision[indices[0]: indices[1]]
@@ -354,7 +358,7 @@ def overclock(name):
     """Handler for region 32."""
     indices = {
         'overvolt_protection': (31, 32),  # Overvolt protection bit
-        'bits_0_to_30':        (0, 31)    # Unknown/Unused
+        'bits_1-31':           (0, 31)    # Unknown/Unused
     }[name]
     __overclock = get('overclock', 'binary')
     return __overclock[indices[0]: indices[1]]
@@ -363,14 +367,14 @@ def overclock(name):
 def advanced_boot(name):
     """Handler for region 66."""
     indices = {
-        'bits_0_to_6':   (25, 32),  # GPIO for ETH_CLK output pin
-        'bit_7':         (24, 25),  # Enable ETH_CLK output pin
-        'bits_8_to_14':  (17, 24),  # GPIO for LAN_RUN output pin
-        'bit_15':        (16, 17),  # Enable LAN_RUN output pin
-        'bits_16_to_23': (8, 16),   # Unknown/Unused
-        'bit_24':        (7, 8),    # Extend USB HUB timeout parameter
-        'bit_25':        (6, 7),    # ETH_CLK Frequency (0 = 25MHz, 1 = 24MHz)
-        'bits_26_to_31': (0, 6)     # Unknown/Unused
+        'bits_0-6':   (25, 32),  # GPIO for ETH_CLK output pin
+        'bit_7':      (24, 25),  # Enable ETH_CLK output pin
+        'bits_8-14':  (17, 24),  # GPIO for LAN_RUN output pin
+        'bit_15':     (16, 17),  # Enable LAN_RUN output pin
+        'bits_16-23': (8, 16),   # Unknown/Unused
+        'bit_24':     (7, 8),    # Extend USB HUB timeout parameter
+        'bit_25':     (6, 7),    # ETH_CLK Frequency (0 = 25MHz, 1 = 24MHz)
+        'bits_26-31': (0, 6)     # Unknown/Unused
     }[name]
     __advanced_boot = get('advanced_boot', 'binary')
     return __advanced_boot[indices[0]: indices[1]]
@@ -482,19 +486,19 @@ def pretty_string(value, do_binary=True):
         sys.exit('Failed to make the string pretty!')
 
 
-def read_otp():
+def read_otp_file():
     """Read OTP from specified file."""
     if len(sys.argv) > 1:  # We're given an argument on the command line
         if path.isfile(sys.argv[1]):
-            with open(sys.argv[1], 'r') as file:
-                __read_otp_inner(file)
+            with open(sys.argv[1], 'r') as otp_file:
+                __read_otp_file_inner(otp_file)
         else:
             sys.exit('Unable to open file.')
     else:  # Use stdin instead.
-        __read_otp_inner(sys.stdin)
+        __read_otp_file_inner(sys.stdin)
 
 
-def __read_otp_inner(myfile):
+def __read_otp_file_inner(myfile):
     """Inner part of OTP file reader."""
     for line in myfile:
         try:
@@ -520,25 +524,28 @@ def __read_otp_inner(myfile):
     if not DATA:
         sys.exit("Invalid OTP Dump (empty file). Please run 'vcgencmd otp_dump' to create file.")
 
-read_otp()
+read_otp_file()
 process_bootmode()
 process_serial()
 process_revision()
 
 print('               Control Register :', get('control', 'hex'), get('control', 'binary'))
-print('JTAG_DEBUG_KEY_PARITY_START_BIT :', pretty_string(control('bits_0_to_7')))
-print(' VPU_CACHE_KEY_PARITY_START_BIT :', pretty_string(control('bits_8_to_15')))
-print('               JTAG_DISABLE_BIT :', control('bit_16'))
-print('     JTAG_DISABLE_REDUNDANT_BIT :', control('bit_17'))
-print('          MACROVISION_START_BIT :', control('bit_18'))
-print('MACROVISION_REDUNDANT_START_BIT :', control('bit_20'))
-print('    DECRYPTION_ENABLE_FOR_DEBUG :', control('bit_22'))
-print('                ARM_DISABLE_BIT :', control('bit_24'))
-print('      ARM_DISABLE_REDUNDANT_BIT :', control('bit_25'))
+print('JTAG_DEBUG_KEY_PARITY_START_BIT :', pretty_string(control('bits_24-31')))
+print(' VPU_CACHE_KEY_PARITY_START_BIT :', pretty_string(control('bits_16-23')))
+print('               JTAG_DISABLE_BIT :', control('bit_15'))
+print('     JTAG_DISABLE_REDUNDANT_BIT :', control('bit_14'))
+print('          MACROVISION_START_BIT :', control('bit_13'))
+print('MACROVISION_REDUNDANT_START_BIT :', control('bit_11'))
+print('    DECRYPTION_ENABLE_FOR_DEBUG :', control('bit_9'))
+print('                ARM_DISABLE_BIT :', control('bit_7'))
+print('      ARM_DISABLE_REDUNDANT_BIT :', control('bit_6'))
 print('                       Bootmode :', get('bootmode', 'hex'), get('bootmode', 'binary'))
 print('                Bootmode - Copy :', get('bootmode_copy', 'hex'), get('bootmode_copy', 'binary'))
 print('          OSC Frequency 19.2MHz :', bootmode('bit_1'))
 print('            SDIO Pullup Enabled :', bootmode('bit_3'))
+print('               Bootmode (Bit 4) :', bootmode('bit_4'))
+print('               Bootmode (Bit 5) :', bootmode('bit_5'))
+print('               Bootmode (Bit 7) :', bootmode('bit_7'))
 print('                  GPIO Bootmode :', bootmode('bit_19'))
 print('             GPIO Bootmode Bank :', bootmode('bit_20'))
 print('                SD Boot Enabled :', bootmode('bit_21'))
@@ -546,8 +553,8 @@ print('                      Boot Bank :', bootmode('bit_22'))
 print('         Bootmode (eMMC Enable) :', bootmode('bit_25'), '(This is not confirmed but is set on the CM3)')
 print('        USB Device Boot Enabled :', bootmode('bit_28'))
 print('          USB Host Boot Enabled :', bootmode('bit_29'))
-print('    Boot Signing Parity ( 0-15) :', pretty_string(boot_signing_parity('bits_0_to_15')))
-print('    Boot Signing Parity (16-31) :', pretty_string(boot_signing_parity('bits_16_to_31')))
+print('    Boot Signing Parity (15-0)  :', pretty_string(boot_signing_parity('bits_0-15')))
+print('    Boot Signing Parity (31-16) :', pretty_string(boot_signing_parity('bits_16-31')))
 print('                  Serial Number :', get('serial_number', 'hex'))
 print('          Inverse Serial Number :', get('serial_number_inverted', 'hex'))
 print('                Revision Number :', get('revision_number', 'hex'))
@@ -571,9 +578,9 @@ print('              MPEG2 License Key :', get('codec_key_one', 'hex'))
 print('               VC-1 License Key :', get('codec_key_two', 'hex'))
 print('                    MAC Address :', format_mac())
 print('                  Advanced Boot :', get('advanced_boot', 'hex'), get('advanced_boot', 'binary'))
-print('             ETH_CLK Output Pin :', pretty_string(advanced_boot('bits_0_to_6'), False))
+print('             ETH_CLK Output Pin :', pretty_string(advanced_boot('bits_0-6'), False))
 print('         ETH_CLK Output Enabled :', advanced_boot('bit_7'))
-print('             LAN_RUN Output Pin :', pretty_string(advanced_boot('bits_8_to_14'), False))
+print('             LAN_RUN Output Pin :', pretty_string(advanced_boot('bits_8-14'), False))
 print('         LAN_RUN Output Enabled :', advanced_boot('bit_15'))
 print('                USB Hub Timeout :', process_hub_timeout(advanced_boot('bit_24')))
 print('              ETH_CLK Frequency :', process_eth_clk_frequency(advanced_boot('bit_25')))
