@@ -517,7 +517,8 @@ def __read_otp_inner(myfile):
             sys.exit('Invalid OTP Dump')
         except TypoError:
             sys.exit("Invalid OTP Dump. Please run 'vcgencmd otp_dump' to create file.")
-
+    if not DATA:
+        sys.exit("Invalid OTP Dump (empty file). Please run 'vcgencmd otp_dump' to create file.")
 
 read_otp()
 process_bootmode()
