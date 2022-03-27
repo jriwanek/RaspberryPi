@@ -204,14 +204,14 @@ REGIONS = {
     'control':                16,  # Control Register
     'bootmode':               17,  # BootMode Register
     'bootmode_copy':          18,  # Backup copy of BootMode Register
-    'unknown_19':             19,  # Always ffffffff in tests
-    'unknown_20':             20,  # Always ffffffff in tests
-    'unknown_21':             21,  # Always ffffffff in tests
-    'unknown_22':             22,  # Always ffffffff in tests
-    'unknown_23':             23,  # Always ffffffff in tests
-    'unknown_24':             24,  # Always ffffffff in tests
-    'unknown_25':             25,  # Always ffffffff in tests
-    'unknown_26':             26,  # Always ffffffff in tests
+    'boot_sign_key_1':        19,  # OTP_BOOT_SIGNING_KEY Always ffffffff unless on baremetal read
+    'boot_sign_key_2':        20,  # OTP_BOOT_SIGNING_KEY Always ffffffff unless on baremetal read
+    'boot_sign_key_3':        21,  # OTP_BOOT_SIGNING_KEY Always ffffffff unless on baremetal read
+    'boot_sign_key_4':        22,  # OTP_BOOT_SIGNING_KEY Always ffffffff unless on baremetal read
+    'boot_sign_key_1_copy':   23,  # OTP_BOOT_SIGNING_KEY_REDUNDANT Always ffffffff unless on baremetal read
+    'boot_sign_key_1_copy':   24,  # OTP_BOOT_SIGNING_KEY_REDUNDANT Always ffffffff unless on baremetal read
+    'boot_sign_key_1_copy':   25,  # OTP_BOOT_SIGNING_KEY_REDUNDANT Always ffffffff unless on baremetal read
+    'boot_sign_key_1_copy':   26,  # OTP_BOOT_SIGNING_KEY_REDUNDANT Always ffffffff unless on baremetal read
     'boot_signing_parity':    27,  # Boot Signing Parity
     'serial_number':          28,  # Serial Number
     'serial_number_inverted': 29,  # Serial Number (Bitflipped)
