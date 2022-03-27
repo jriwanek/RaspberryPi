@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """Raspberry Pi OTP Dump Parser
 
- Copyright 2019 Jasmine Iwanek & Dylan Morrison
+ Copyright 2019-2022 Jasmine Iwanek & Dylan Morrison
 
  Permission is hereby granted, free of charge, to any person obtaining a copy of this
  software and associated documentation files (the "Software"), to deal in the Software
@@ -218,7 +218,7 @@ REGIONS = {
     'revision_number':        30,  # Revision Number
     'batch_number':           31,  # Batch Number
     'overclock':              32,  # Overclock Register
-    'unknown_33':             33,
+    'board_rev_extended':     33,  # Extended Board Revision
     'unknown_34':             34,
     'unknown_35':             35,
     'customer_one':           36,  # Customer OTP Region #1
@@ -232,15 +232,15 @@ REGIONS = {
     'unknown_44':             44,
     'codec_key_one':          45,  # Codec License Key #1 (MPEG2)
     'codec_key_two':          46,  # Codec License Key #2 (WVC-1)
-    'unknown_47':             47,
-    'unknown_48':             48,
-    'unknown_49':             49,
-    'unknown_50':             50,
-    'unknown_51':             51,
-    'unknown_52':             52,
-    'unknown_53':             53,
-    'unknown_54':             54,
-    'unknown_55':             55,
+    'cm4_signed_boot_one':    47,  # Reserved for signed-boot on Compute Module 4
+    'cm4_signed_boot_two':    48,  # Reserved for signed-boot on Compute Module 4
+    'cm4_signed_boot_three':  49,  # Reserved for signed-boot on Compute Module 4
+    'cm4_signed_boot_four':   50,  # Reserved for signed-boot on Compute Module 4
+    'cm4_signed_boot_five':   51,  # Reserved for signed-boot on Compute Module 4
+    'cm4_signed_boot_six':    52,  # Reserved for signed-boot on Compute Module 4
+    'cm4_signed_boot_seven':  53,  # Reserved for signed-boot on Compute Module 4
+    'cm4_signed_boot_eight':  54,  # Reserved for signed-boot on Compute Module 4
+    'cm4_signed_boot_nine':   55,  # Reserved for signed-boot on Compute Module 4
     'unknown_56':             56,
     'unknown_57':             57,
     'unknown_58':             58,
