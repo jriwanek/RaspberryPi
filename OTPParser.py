@@ -496,6 +496,7 @@ def read_otp_file():
         else:
             sys.exit('Unable to open file.')
     else:  # Use stdin instead.
+        print("Reading OTP values from stdin")
         __read_otp_file_inner(sys.stdin)
 
 
