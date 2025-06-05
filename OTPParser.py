@@ -576,7 +576,7 @@ if __name__ == "__main__":
     print('                            RAM :', MEMORY_SIZES_AS_STRING[BOARD['memory']], "MB")
     print('                   Manufacturer :', MANUFACTURERS_AS_STRING[BOARD['manufacturer']])
     print('                            CPU :', PROCESSORS_AS_STRING[BOARD['processor']])
-    print('                     Board Type :', 'Raspberry Pi Model ' + BOARD_TYPES_AS_STRING[BOARD['type']])
+    print('                     Board Type :', 'Raspberry Pi Model ' + BOARD_TYPES_AS_STRING.get(BOARD['type'], "{} (unknown)".format(bin(int(BOARD["type"], 2))) ) )
     print('                 Board Revision :', BOARD_REVISIONS_AS_STRING[BOARD['revision']])
     print('                   Batch Number :', get('batch_number', 'hex'))
     print('        Overvolt Protection Bit :', overclock('overvolt_protection'))
