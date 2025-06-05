@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """Raspberry Pi OTP Dump Parser
 
- Copyright 2019-2022 Jasmine Iwanek & Dylan Morrison
+ Copyright 2019-2022 Jasmine Iwanek & Dylan Morrison & Arya Voronova
 
  Permission is hereby granted, free of charge, to any person obtaining a copy of this
  software and associated documentation files (the "Software"), to deal in the Software
