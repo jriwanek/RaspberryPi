@@ -33,16 +33,17 @@ from os import path
 if (sys.version_info < (2, 6) or (sys.version_info >= (3, 0) and sys.version_info < (3, 3))):
     sys.exit('OTPParser requires Python 2.6 or 3.3 and newer.')
 
-try:
-    from future import standard_library
-    standard_library.install_aliases()
-except ImportError:
-    sys.exit('OTPParser requires future!')
+if sys.version_info < (3, 3): # only applying future imports to Python2
+    try:
+        from future import standard_library
+        standard_library.install_aliases()
+    except ImportError:
+        sys.exit('OTPParser requires future!')
 
-try:
-    from builtins import dict, int, open, range, str
-except ImportError:
-    sys.exit("OTPParser requires future! (Cant import 'builtins'")
+    try:
+        from builtins import dict, int, open, range, str
+    except ImportError:
+        sys.exit("OTPParser requires future! (Cant import 'builtins'")
 
 
 class TypoError(Exception):
